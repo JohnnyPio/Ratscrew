@@ -20,7 +20,7 @@ class Deck:
         return iter(self.cards)
 
     def deal(self):
-        if len(self.cards) == 0:
+        if self.__len__() == 0:
             return None
         return self.cards.pop()
 
