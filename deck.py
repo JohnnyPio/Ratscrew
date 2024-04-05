@@ -29,3 +29,17 @@ class Deck:
         for card in self.cards:
             deck_str += card[0] + " of " + card[1] + "\n"
         return deck_str
+
+
+def initial_full_deck_deal_to_all_players(card_deck, all_players):
+    num_players = len(all_players)
+    player_index = 0
+    player_hands = {a_player.name: [] for a_player in all_players}
+
+    for card in card_deck:
+        a_player = all_players[player_index]
+        player_hands[a_player.name].append(card)
+        player_index = (player_index + 1) % num_players
+
+    for a_player in all_players:
+        a_player.cards = player_hands[a_player.name]
