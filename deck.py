@@ -45,3 +45,6 @@ class Deck:
 
     def empty(self):
         self.cards = []
+
+    def add_card(self, card):
+        self.cards.append(card)
