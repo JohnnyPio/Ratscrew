@@ -13,14 +13,11 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def __len__(self):
-        return len(self.cards)
-
     def __iter__(self):
         return iter(self.cards)
 
     def deal(self):
-        if self.__len__() == 0:
+        if len(self.cards) == 0:
             return None
         return self.cards.pop()
 
