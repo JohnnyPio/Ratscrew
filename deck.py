@@ -16,11 +16,6 @@ class Deck:
     def __iter__(self):
         return iter(self.cards)
 
-    def deal(self):
-        if len(self.cards) == 0:
-            return None
-        return self.cards.pop()
-
     def __str__(self):
         deck_str = ""
         for card in self.cards:
