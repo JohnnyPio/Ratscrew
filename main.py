@@ -26,7 +26,12 @@ while both_players_have_more_than_zero_cards:
 
     if game.card_is_royal(current_card):
         print(f"the current player is {current_player.name}")
-        current_player.flip_for_royal(current_card, pile)
+        if not current_player.flip_for_royal(current_card, pile):
+            # TODO Write method for getting the player before
+            player_before = players_hands[(player_index - 1) % len(players_hands)]
+            player_before.add_cards(list(pile.cards))
+            pile.cards = []
+            player_before.flip_single_card(pile)
     else:
         current_player.flip_single_card(pile)
 

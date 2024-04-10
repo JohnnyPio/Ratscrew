@@ -9,6 +9,10 @@ class Player:
     def add_card(self, card):
         self.cards.append(card)
 
+    def add_cards(self, cards):
+        for card in cards:
+            self.cards.append(card)
+
     def remove_card(self, card):
         if card in self.cards:
             self.cards.remove(card)
@@ -22,28 +26,55 @@ class Player:
         self.cards.pop(-1)
         return flipped_card
 
-# TODO More refactoring needed. Need a way to print "player loses pile" if they don't get a royal in the number of turns.
+    # TODO More refactoring needed. Need a way to print "player loses pile" if they don't get a royal in the number of turns.
     def flip_for_royal(self, last_card, current_pile):
+        max_cards = 0
+        flipped_cards = []
         if last_card[0] == "Ace":
-            for _ in range(4):
+            max_cards = 4
+            for _ in range(max_cards):
                 flipped_card = self.flip_single_card(current_pile)
+                flipped_cards.append(flipped_card)
                 if game.card_is_royal(flipped_card):
-                    break
+                    return True
+            for card in flipped_cards:
+                if not game.card_is_royal(card):
+                    print("no royals here")
+                    return False
+            # TODO Add handling for player running out of cards
         elif last_card[0] == "King":
+            max_cards = 3
             for _ in range(3):
                 flipped_card = self.flip_single_card(current_pile)
+                flipped_cards.append(flipped_card)
                 if game.card_is_royal(flipped_card):
-                    break
+                    return True
+            for card in flipped_cards:
+                if not game.card_is_royal(card):
+                    print("no royals here")
+                    return False
         elif last_card[0] == "Queen":
-            for _ in range(2):
+            max_cards = 2
+            for _ in range(max_cards):
                 flipped_card = self.flip_single_card(current_pile)
+                flipped_cards.append(flipped_card)
                 if game.card_is_royal(flipped_card):
-                    break
+                    return True
+            for card in flipped_cards:
+                if not game.card_is_royal(card):
+                    print("no royals here")
+                    return False
         elif last_card[0] == "Jack":
-            for _ in range(1):
+            max_cards = 1
+            for _ in range(max_cards):
                 flipped_card = self.flip_single_card(current_pile)
+                flipped_cards.append(flipped_card)
                 if game.card_is_royal(flipped_card):
-                    break
+                    return True
+            for card in flipped_cards:
+                if not game.card_is_royal(card):
+                    print("no royals here")
+                    return False
         else:
             return ValueError
 
