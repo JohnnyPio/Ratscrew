@@ -1,8 +1,11 @@
 import random
 
+from game import Game
 
-class Deck:
+
+class Deck(Game):
     def __init__(self):
+        super().__init__()
         self.cards = []
         suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
         values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']

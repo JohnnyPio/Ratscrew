@@ -1,8 +1,10 @@
+from game import Game
 import game
 
 
-class Player:
+class Player(Game):
     def __init__(self, name):
+        super().__init__()
         self.name = name
         self.cards = []
 
