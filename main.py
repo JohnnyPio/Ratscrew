@@ -27,12 +27,11 @@ while both_players_have_more_than_zero_cards:
     if game.card_is_royal(current_card):
         print(f"the current player is {current_player.name}")
         if not current_player.flip_for_royal(current_card, pile):
-            # TODO Write method for getting the player before
-            player_before = players_hands[(player_index - 1) % len(players_hands)]
+            player_before = players_hands[
+                (player_index - 1) % len(players_hands)]  # TODO Write method for getting the player before
             pile.shuffle()
             player_before.add_cards(list(pile.cards))
-            # TODO why doesn't pile.empty() work here?
-            pile.cards = []
+            pile.cards = []  # TODO why doesn't pile.empty() work here?
             player_before.flip_single_card(pile)
     else:
         current_player.flip_single_card(pile)
@@ -45,4 +44,3 @@ while both_players_have_more_than_zero_cards:
         both_players_have_more_than_zero_cards = False
         print(f"player_1 wins")
         break
-

@@ -26,17 +26,21 @@ class Player:
         self.cards.pop(-1)
         return flipped_card
 
-    # TODO More refactoring needed. Need a way to print "player loses pile" if they don't get a royal in the number of turns.
+    # TODO More refactoring needed. Need to have a way to know if player runs out of cards
     def flip_for_royal(self, last_card, current_pile):
         max_cards = 0
         flipped_cards = []
         if last_card[0] == "Ace":
             max_cards = 4
             for _ in range(max_cards):
-                flipped_card = self.flip_single_card(current_pile)
-                flipped_cards.append(flipped_card)
-                if game.card_is_royal(flipped_card):
-                    return True
+                if len(self.cards) > 0:
+                    flipped_card = self.flip_single_card(current_pile)
+                    flipped_cards.append(flipped_card)
+                    if game.card_is_royal(flipped_card):
+                        return True
+                else:
+                    print("out of cards")
+                    return False
             for card in flipped_cards:
                 if not game.card_is_royal(card):
                     print("no royals here")
@@ -75,8 +79,6 @@ class Player:
                 if not game.card_is_royal(card):
                     print("no royals here")
                     return False
-        else:
-            return ValueError
 
     def player_gets_pile(self, current_pile):
         self.cards.append(current_pile)
