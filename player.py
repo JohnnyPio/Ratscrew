@@ -24,7 +24,7 @@ class Player(Game):
     def flip_single_card(self, current_pile):
         flipped_card = self.cards[-1]
         print(f"{self.name}'s flipped cards is {flipped_card}")
-        current_pile.add_card(flipped_card)
+        current_pile.append(flipped_card)
         self.cards.pop(-1)
         return flipped_card
 

@@ -18,7 +18,7 @@ def card_is_royal(card):
 class Game:
     def __init__(self):
         self.players = []
-        self.dealing_deck = deck.Deck
+        self.pile = deck.Deck
         self.pile = []
 
     def add_player(self, player):

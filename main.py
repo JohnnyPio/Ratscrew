@@ -4,21 +4,22 @@ import game
 from player import Player
 
 my_game = game.Game()
+dealing_deck = deck.Deck()
 pile = my_game.pile
 
 my_game.add_player(player.Player("computer"))
 my_game.add_player(player.Player("player1"))
 # TODO fix this for more than 2 players
-my_game.dealing_deck.initial_full_deck_deal_to_all_players(my_game.dealing_deck, my_game.players)
+dealing_deck.initial_full_deck_deal_to_all_players(my_game.players)
 
 
 player_index = 0
 current_player = my_game.players[player_index]
-current_player.flip_single_card(pile)
+current_player.flip_single_card(my_game.pile)
 
 both_players_have_more_than_zero_cards = True
 while both_players_have_more_than_zero_cards:
-    current_card = pile.cards[-1]
+    current_card = my_game.pile[-1]
     player_index = (player_index + 1) % len(my_game.players)
     current_player = my_game.players[player_index]
 
@@ -27,7 +28,7 @@ while both_players_have_more_than_zero_cards:
         if not current_player.flip_for_royal(current_card, pile):
             player_before = my_game.players[
                 (player_index - 1) % len(my_game.players)]  # TODO Write method for getting the player before
-            pile.shuffle()
+            my_game.pile.shuffle()
             player_before.add_cards(list(pile.cards))
             pile.cards = []  # TODO why doesn't pile.empty() work here?
             player_before.flip_single_card(pile)
