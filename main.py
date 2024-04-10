@@ -29,7 +29,9 @@ while both_players_have_more_than_zero_cards:
         if not current_player.flip_for_royal(current_card, pile):
             # TODO Write method for getting the player before
             player_before = players_hands[(player_index - 1) % len(players_hands)]
+            pile.shuffle()
             player_before.add_cards(list(pile.cards))
+            # TODO why doesn't pile.empty() work here?
             pile.cards = []
             player_before.flip_single_card(pile)
     else:
