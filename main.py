@@ -3,6 +3,7 @@ import player
 import game
 from player import Player
 
+
 my_deck = deck.Deck()
 my_deck.shuffle()
 pile = deck.Deck()
