@@ -31,10 +31,10 @@ class Player:
             print("Card not found in hand.")
 
     def flip_single_card(self, current_pile):
-        flipped_card = self.cards[-1]
+        flipped_card = self.cards[0]
         print(f"{self.name}'s flipped cards is {flipped_card}")
         current_pile.add_card(flipped_card)
-        self.cards.pop(-1)
+        self.cards.pop(0)
         return flipped_card
 
     def can_complete_flipping_for_royals(self, last_card, current_pile):
