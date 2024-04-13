@@ -29,3 +29,11 @@ def get_next_player_from_current_player(current_player, all_players):
 def get_player_before_current_player(current_player, all_players):
     current_player_index = get_index_from_player(current_player, all_players)
     return all_players[(current_player_index - 1) % len(all_players)]
+
+
+def all_players_have_cards(all_players):
+    for player in all_players:
+        if not player.cards:
+            print(f"{player.name} loses")
+            return False
+    return True
