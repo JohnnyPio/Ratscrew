@@ -8,10 +8,11 @@ my_deck.shuffle()
 pile = deck.Deck()
 pile.empty()
 
+players_hands = []
 computer_player = player.Player("computer")
+players_hands.append(computer_player)
 player_1 = player.Player("player1")
-# TODO fix this for more than 2 players
-players_hands: list[Player] = [computer_player, player_1]
+players_hands.append(player_1)
 my_deck.initial_full_deck_deal_to_all_players(players_hands)
 
 # Initialize the flipping
