@@ -55,13 +55,8 @@ class Player:
             print("no royals here")
             return False
 
-
-def player_gets_pile(self, current_pile):
-    self.cards.append(current_pile)
-
-
-def __str__(self):
-    hand_str = ""
-    for card in self.cards:
-        hand_str += str(card) + "\n"
-    return hand_str
+    def __str__(self):
+        hand_str = ""
+        for card in self.cards:
+            hand_str += str(card) + "\n"
+        return hand_str

@@ -37,3 +37,4 @@ def all_players_have_cards(all_players):
             print(f"{player.name} loses")
             return False
     return True
+
