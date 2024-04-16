@@ -35,6 +35,7 @@ class Player:
         print(f"{self.name}'s flipped cards is {flipped_card}")
         current_pile.add_card(flipped_card)
         self.cards.pop(0)
+        game.delay_between_card_flips()
         return flipped_card
 
     def can_complete_flipping_for_royals(self, last_card, current_pile):
