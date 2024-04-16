@@ -1,3 +1,6 @@
+import time
+
+
 # TODO add a listener for the user to flip when pressing spacebar
 
 def card_is_royal(card):
@@ -38,3 +41,18 @@ def all_players_have_cards(all_players):
             return False
     return True
 
+
+def slap(pile, players):
+    while True:
+        if len(pile.cards) >= 2 and pile.cards[-1][0] == pile.cards[-2][0]:
+            print(f"Player {players[-1]} slapped the deck!")
+        elif len(pile.cards) >= 3 and pile.cards[-1][0] == pile.cards[-3][0]:
+            print(f"Player {players[-1]} slapped the deck!")
+        else:
+            print("No match! Keep playing...")
+
+
+def delay_between_card_flips():
+    # Should change based on easy,med,hard
+    delay = 2  # x second delay
+    time.sleep(delay)
