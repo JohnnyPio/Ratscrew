@@ -1,4 +1,5 @@
 import time
+
 from deck import Deck
 
 
@@ -26,35 +27,29 @@ class Game:
     def get_player_before_current_player(self):
         return self.players[(self.get_index_from_player() - 1) % len(self.players)]
 
-def card_is_royal(card):
-    if card[0] == "Ace":
-        return True
-    elif card[0] == "King":
-        return True
-    elif card[0] == "Queen":
-        return True
-    elif card[0] == "Jack":
-        return True
-    else:
-        return False
+    def player_wins_the_pile(self):
+        self.pile.shuffle()
+        player_before = self.get_player_before_current_player()
+        print(f"{player_before.name} wins the pile")
+        player_before.add_cards(list(self.pile.cards))
+        self.pile.empty()
+        player_before.flip_single_card(self.pile)
+        self.get_next_player_from_current_player()
 
-
-def get_current_player_from_index(current_player_index, all_players):
-    return all_players[current_player_index]
-
-
-def get_index_from_player(current_player, all_players):
-    return all_players.index(current_player)
-
-
-def get_next_player_from_current_player(current_player, all_players):
-    current_player_index = get_index_from_player(current_player, all_players)
-    return all_players[(current_player_index + 1) % len(all_players)]
-
-
-def get_player_before_current_player(current_player, all_players):
-    current_player_index = get_index_from_player(current_player, all_players)
-    return all_players[(current_player_index - 1) % len(all_players)]
+    # TODO Needs fixing but should be better, actually should be a method in deck() class
+    def top_card_is_royal(self):
+        top_card = self.pile.cards[0]
+        top_card_rank = top_card[0]
+        if top_card_rank == "Ace":
+            return True
+        elif top_card_rank == "King":
+            return True
+        elif top_card_rank == "Queen":
+            return True
+        elif top_card_rank == "Jack":
+            return True
+        else:
+            return False
 
 
 def all_players_have_cards(all_players):
