@@ -54,9 +54,9 @@ def all_players_have_cards(all_players):
 
 def slap(pile, players):
     while True:
-        if len(pile.cards) >= 2 and pile.cards[-1][0] == pile.cards[-2][0]:
+        if matching_top_cards(pile):
             print(f"Player {players[-1]} slapped the deck!")
-        elif len(pile.cards) >= 3 and pile.cards[-1][0] == pile.cards[-3][0]:
+        elif matching_sandwich_cards(pile):
             print(f"Player {players[-1]} slapped the deck!")
         else:
             print("No match! Keep playing...")
