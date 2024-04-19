@@ -11,7 +11,20 @@ class Game:
         self.pile.shuffle()
         self.pile.initial_full_deck_deal_to_all_players(self.players)
         self.pile.empty()
+        self.current_player = players[0]
+        self.current_player.flip_single_card(self.pile)
 
+    def get_current_player_from_index(self):
+        return self.players[self.current_player]
+
+    def get_index_from_player(self):
+        return self.players.index(self.current_player)
+
+    def get_next_player_from_current_player(self):
+        self.current_player = self.players[(self.get_index_from_player() + 1) % len(self.players)]
+
+    def get_player_before_current_player(self):
+        return self.players[(self.get_index_from_player() - 1) % len(self.players)]
 
 def card_is_royal(card):
     if card[0] == "Ace":
