@@ -61,6 +61,11 @@ while both_players_have_more_than_zero_cards:
             player_before.flip_single_card(my_game.pile)
             current_player = game.get_next_player_from_current_player(current_player, players_hands)
 
+    # TODO This works well except in a royal situation. Need to have a way to pull royal sitch up
+    if game.is_slappable_event(my_game.pile):
+        game.computer_slap_delay()
+        game.players_in_slap_event(computer_player)
+
     if not game.all_players_have_cards(players_hands):
         both_players_have_more_than_zero_cards = False
         break
