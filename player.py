@@ -1,15 +1,5 @@
+import deck
 import game
-
-
-def max_cards_to_flip(last_card):
-    if last_card[0] == "Ace":
-        return 4
-    elif last_card[0] == "King":
-        return 3
-    elif last_card[0] == "Queen":
-        return 2
-    elif last_card[0] == "Jack":
-        return 1
 
 
 class Player:
@@ -31,24 +21,6 @@ class Player:
         self.cards.pop(0)
         game.delay_between_card_flips()
         return flipped_card
-
-    def can_complete_flipping_for_royals(self, last_card, current_pile):
-        max_cards = max_cards_to_flip(last_card)
-        flipped_cards = []
-        for _ in range(max_cards):
-            if not self.cards:
-                print("out of cards")
-                return False
-
-            flipped_card = self.flip_single_card(current_pile)
-            flipped_cards.append(flipped_card)
-
-            if game.card_is_royal(flipped_card):
-                return True
-
-        if not any(game.card_is_royal(card) for card in flipped_cards):
-            print("no royals here")
-            return False
 
     def __str__(self):
         hand_str = ""
