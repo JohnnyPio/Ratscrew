@@ -10,9 +10,6 @@ class Deck:
             for value in values:
                 self.cards.append((value, suit))
 
-    def shuffle(self):
-        random.shuffle(self.cards)
-
     def __iter__(self):
         return iter(self.cards)
 
@@ -21,6 +18,9 @@ class Deck:
         for card in self.cards:
             deck_str += card[0] + " of " + card[1] + "\n"
         return deck_str
+
+    def shuffle(self):
+        random.shuffle(self.cards)
 
     def initial_full_deck_deal_to_all_players(self, all_players):
         num_players = len(all_players)
@@ -41,3 +41,14 @@ class Deck:
 
     def add_card(self, card):
         self.cards.append(card)
+
+    def matching_top_cards(self):
+        if len(self.cards) >= 2 and self.cards[-1][0] == self.cards[-2][0]:
+            return True
+
+    def matching_sandwich_cards(self):
+        if len(self.cards) >= 3 and self.cards[-1][0] == self.cards[-3][0]:
+            return True
+
+    def get_top_card(self):
+        return self.cards[-1]
