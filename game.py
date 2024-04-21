@@ -120,13 +120,12 @@ class Game:
         else:
             return False
 
-    def get_bot_player(self):
-        return [x for x in self.players if x.isbot()]
+    def get_sole_bot_player(self):
+        return next((x for x in self.players if x.is_player_a_bot), ValueError)
 
     # TODO This works well except in a royal situation. Need to have a way to pull royal sitch up
     def a_bot_player_slaps(self):
-        if self.is_slappable_event():
-            this_slap = slap.Slap()
-            this_slap.add_player_to_slap_pile(self.get_bot_player(), computer_slap_delay())
+        this_slap = slap.Slap()
+        this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), computer_slap_delay())
 
 
