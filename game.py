@@ -1,5 +1,7 @@
+import threading
 import time
 
+import slap
 from deck import Deck
 
 
@@ -108,6 +110,23 @@ class Game:
             if card_is_royal(self.pile.get_top_card()):
                 return True
 
-        if not any(card_is_royal(card) for card in self.pile):
+        if not any(card_is_royal(card) for card in self.pile.cards[-1*len(flipped_cards)]):
             print("no royals here")
             return False
+
+    def any_player_has_slapped(self):
+        if any(player.has_slapped() for player in self.players):
+            return True
+        else:
+            return False
+
+    def get_bot_player(self):
+        return [x for x in self.players if x.isbot()]
+
+    # TODO This works well except in a royal situation. Need to have a way to pull royal sitch up
+    def a_bot_player_slaps(self):
+        if self.is_slappable_event():
+            this_slap = slap.Slap()
+            this_slap.add_player_to_slap_pile(self.get_bot_player(), computer_slap_delay())
+
+
