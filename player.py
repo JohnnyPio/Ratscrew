@@ -6,6 +6,14 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.cards = []
+        self.has_slapped = False
+        self.isbot = False
+
+    def __str__(self):
+        hand_str = ""
+        for card in self.cards:
+            hand_str += str(card) + "\n"
+        return hand_str
 
     def add_card(self, card):
         self.cards.append(card)
@@ -22,8 +30,10 @@ class Player:
         game.delay_between_card_flips()
         return flipped_card
 
-    def __str__(self):
-        hand_str = ""
-        for card in self.cards:
-            hand_str += str(card) + "\n"
-        return hand_str
+    def has_slapped(self):
+        self.has_slapped = True
+
+    def set_computer_player(self):
+        self.isbot = True
+
+
