@@ -36,4 +36,8 @@ class Player:
     def set_computer_player(self):
         self.isbot = True
 
-
+    def is_player_a_bot(self):
+        if self.isbot:
+            return True
+        else:
+            return False
