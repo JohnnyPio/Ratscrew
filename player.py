@@ -18,6 +18,9 @@ class Player:
     def add_card(self, card):
         self.cards.append(card)
 
+    def remove_card(self, card):
+        self.cards.pop(card)
+
     def add_cards(self, cards):
         for card in cards:
             self.cards.append(card)
@@ -30,7 +33,7 @@ class Player:
         game.delay_between_card_flips()
         return flipped_card
 
-    def has_slapped(self):
+    def set_as_slapped(self):
         self.has_slapped = True
 
     def set_computer_player(self):
