@@ -2,9 +2,7 @@ import threading
 
 import player
 import game
-import keyboard
-
-import slap
+from event import Event
 
 players_hands = []
 computer_player = player.Player("computer")
@@ -14,7 +12,9 @@ player_1 = player.Player("player1")
 players_hands.append(player_1)
 
 my_game = game.Game(players_hands)
-event = threading.Event()
+
+
+# slap_listener_event = Event()
 
 
 def run_the_game():
@@ -32,6 +32,15 @@ def run_the_game():
             break
         if my_game.is_slappable_event():
             my_game.a_bot_player_slaps()
+            # print(f"computer has slapped is {computer_player.has_slapped}")
+            # print(f"has anyone slapped: {my_game.any_player_has_slapped()}")
 
 
-run_the_game()
+# run_the_game()
+listen_thread = threading.Thread(target=my_game.monitor_deck)
+listen_thread.start()
+
+game_thread = threading.Thread(target=run_the_game)
+game_thread.start()
+
+listen_thread.join()

@@ -66,6 +66,7 @@ class Game:
     def get_player_before_current_player(self):
         return self.players[(self.get_index_from_player() - 1) % len(self.players)]
 
+    # TODO Break this method up
     def player_wins_the_pile(self):
         self.pile.shuffle()
         player_before = self.get_player_before_current_player()
@@ -74,6 +75,11 @@ class Game:
         self.pile.empty()
         player_before.flip_single_card(self.pile)
         self.get_next_player_from_current_player()
+
+    def player_buries_their_card(self, player):
+        top_player_card = player.cards[0]
+        self.pile.cards.insert(0, top_player_card)
+        player.remove_card(top_player_card)
 
     def all_players_have_cards(self):
         for player in self.players:
@@ -94,6 +100,8 @@ class Game:
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
             return True
+        else:
+            return False
 
     def can_complete_flipping_for_royals(self):
         last_card = self.pile.get_top_card()
@@ -115,7 +123,7 @@ class Game:
             return False
 
     def any_player_has_slapped(self):
-        if any(player.has_slapped() for player in self.players):
+        if any(player.set_as_slapped for player in self.players):
             return True
         else:
             return False
@@ -127,5 +135,14 @@ class Game:
     def a_bot_player_slaps(self):
         this_slap = slap.Slap()
         this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), computer_slap_delay())
+        self.get_sole_bot_player().set_as_slapped()
+
+    def monitor_deck(self):
+        while not self.any_player_has_slapped():
+            print("thread is working")
+            if self.is_slappable_event():
+                print("someone should slap")
+                break
+            time.sleep(.5)
 
 
