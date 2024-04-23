@@ -2,6 +2,10 @@ import deck
 import game
 
 
+def add_card_to_pile(current_pile, flipped_card):
+    current_pile.add_card(flipped_card)
+
+
 class Player:
     def __init__(self, name):
         self.name = name
@@ -18,8 +22,8 @@ class Player:
     def add_card(self, card):
         self.cards.append(card)
 
-    def remove_card(self, card):
-        self.cards.pop(card)
+    def remove_top_card_from_hand(self):
+        self.cards.pop(0)
 
     def add_cards(self, cards):
         for card in cards:
@@ -28,8 +32,8 @@ class Player:
     def flip_single_card(self, current_pile):
         flipped_card = self.cards[0]
         print(f"{self.name}'s flipped cards is {flipped_card}")
-        current_pile.add_card(flipped_card)
-        self.cards.pop(0)
+        add_card_to_pile(current_pile, flipped_card)
+        self.remove_top_card_from_hand()
         game.delay_between_card_flips()
         return flipped_card
 
