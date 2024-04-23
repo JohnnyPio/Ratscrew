@@ -1,6 +1,4 @@
-import threading
 import time
-
 import slap
 from deck import Deck
 
