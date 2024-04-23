@@ -53,6 +53,8 @@ class Game:
         self.pile.empty()
         self.current_player = players[0]
         self.current_player.flip_single_card(self.pile)
+        self.callbacks = []
+        self.should_continue_dealing = True
 
     def get_current_player_from_index(self):
         return self.players[self.current_player]
@@ -113,6 +115,7 @@ class Game:
                 return False
 
             self.current_player.flip_single_card(self.pile)
+            self.notify_observers()
             flipped_cards.append(self.pile.get_top_card())
 
             if card_is_royal(self.pile.get_top_card()):
@@ -145,4 +148,13 @@ class Game:
                 break
             time.sleep(.5)
 
+    def add_observer(self, callback):
+        self.callbacks.append(callback)
+
+    def notify_observers(self):
+        for callback in self.callbacks:
+            callback(self.pile)  # Pass the current pile to the observer
+
+    def stop_dealing(self):
+        self.should_continue_dealing = False
 

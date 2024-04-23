@@ -23,10 +23,6 @@ def run_the_game():
 
         if not my_game.all_players_have_cards():
             break
-        if my_game.is_slappable_event():
-            my_game.a_bot_player_slaps()
-            # print(f"computer has slapped is {computer_player.has_slapped}")
-            # print(f"has anyone slapped: {my_game.any_player_has_slapped()}")
 
 
 def test(pile):
