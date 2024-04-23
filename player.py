@@ -29,6 +29,7 @@ class Player:
         for card in cards:
             self.cards.append(card)
 
+    # TODO This needs to be broken up. Perhaps moved into game. And have the notify observer here.
     def flip_single_card(self, current_pile):
         flipped_card = self.cards[0]
         print(f"{self.name}'s flipped cards is {flipped_card}")
