@@ -43,6 +43,9 @@ class Player:
     def set_computer_player(self):
         self.isbot = True
 
+    def get_number_of_cards(self):
+        return len(self.cards)
+
     def is_player_a_bot(self):
         if self.isbot:
             return True
