@@ -68,6 +68,8 @@ class Game:
         self.pile.shuffle()
         player_before = self.get_player_before_current_player()
         print(f"{player_before.name} wins the pile")
+        print(f"{self.players[0].name} has {self.players[0].get_number_of_cards()}")
+        print(f"{self.players[1].name} has {self.players[1].get_number_of_cards()}")
         player_before.add_cards(list(self.pile.cards))
         self.pile.empty()
         player_before.flip_single_card(self.pile)
