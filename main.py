@@ -25,16 +25,6 @@ def run_the_game():
             break
 
 
-def test(pile):
-    if pile.matching_sandwich_cards() or pile.matching_top_cards():
-        print("Slap time")
-        my_game.stop_dealing()
-        # Analyze the slap
-        # Act accordingly
-        # run_the_game() again
-        # TODO the game initialization needs to be tweaked for this
-
-
 my_game = game.Game(players_hands)
-my_game.add_observer(test)
+my_game.add_observer(my_game.monitor_for_slaps)
 run_the_game()

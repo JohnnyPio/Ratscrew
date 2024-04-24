@@ -133,7 +133,16 @@ class Game:
 
     def notify_observers(self):
         for callback in self.callbacks:
-            callback(self.pile)  # Pass the current pile to the observer
+            callback()  # Pass the current pile to the observer
 
     def stop_dealing(self):
         self.should_continue_dealing = False
+
+    def monitor_for_slaps(self):
+        if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
+            print("Slap time")
+            self.stop_dealing()
+            # Analyze the slap
+            # Act accordingly
+            # run_the_game() again
+            # TODO the game initialization needs to be tweaked for this
