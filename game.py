@@ -54,9 +54,6 @@ class Game:
         self.callbacks = []
         self.should_continue_dealing = True
 
-    def get_current_player_from_index(self):
-        return self.players[self.current_player]
-
     def get_index_from_player(self):
         return self.players.index(self.current_player)
 
@@ -88,15 +85,6 @@ class Game:
                 return False
         return True
 
-    def slap(self):
-        while True:
-            if self.pile.matching_top_cards():
-                print(f"Player {self.players[-1]} slapped the deck!")
-            elif self.pile.matching_sandwich_cards():
-                print(f"Player {self.players[-1]} slapped the deck!")
-            else:
-                print("No match! Keep playing...")
-
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
             return True
@@ -119,7 +107,7 @@ class Game:
             if card_is_royal(self.pile.get_top_card()):
                 return True
 
-        if not any(card_is_royal(card) for card in self.pile.cards[-1*len(flipped_cards)]):
+        if not any(card_is_royal(card) for card in self.pile.cards[-1 * len(flipped_cards)]):
             print("no royals here")
             return False
 
@@ -138,14 +126,6 @@ class Game:
         this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), computer_slap_delay())
         self.get_sole_bot_player().set_as_slapped()
 
-    def monitor_deck(self):
-        while not self.any_player_has_slapped():
-            print("thread is working")
-            if self.is_slappable_event():
-                print("someone should slap")
-                break
-            time.sleep(.5)
-
     def add_observer(self, callback):
         self.callbacks.append(callback)
 
@@ -155,4 +135,3 @@ class Game:
 
     def stop_dealing(self):
         self.should_continue_dealing = False
-
