@@ -22,19 +22,6 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def initial_full_deck_deal_to_all_players(self, all_players):
-        num_players = len(all_players)
-        player_index = 0
-        player_hands = {a_player.name: [] for a_player in all_players}
-
-        for card in self:
-            a_player = all_players[player_index]
-            player_hands[a_player.name].append(card)
-            player_index = (player_index + 1) % num_players
-
-        for a_player in all_players:
-            a_player.cards = player_hands[a_player.name]
-
     def empty(self):
         self.cards = []
         return self
@@ -50,5 +37,6 @@ class Deck:
         if len(self.cards) >= 3 and self.cards[-1][0] == self.cards[-3][0]:
             return True
 
-    def get_top_card(self):
-        return self.cards[-1]
+    def get_top_card_of_deck(self):
+        if len(self.cards) > 0:
+            return self.cards[-1]
