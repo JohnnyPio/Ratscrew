@@ -1,10 +1,3 @@
-import game
-
-
-def add_card_to_pile(current_pile, flipped_card):
-    current_pile.add_card(flipped_card)
-
-
 class Player:
     def __init__(self, name):
         self.name = name
@@ -29,12 +22,9 @@ class Player:
             self.cards.append(card)
 
     # TODO This needs to be broken up. Perhaps moved into game. And have the notify observer here.
-    def flip_single_card(self, current_pile):
-        flipped_card = self.cards[0]
+    def flip_single_card(self):
+        flipped_card = self.get_top_card_of_player()
         print(f"{self.name}'s flipped cards is {flipped_card}")
-        add_card_to_pile(current_pile, flipped_card)
-        self.remove_top_card_from_hand()
-        game.delay_between_card_flips()
         return flipped_card
 
     def set_as_slapped(self):
@@ -51,3 +41,7 @@ class Player:
             return True
         else:
             return False
+
+    def get_top_card_of_player(self):
+        if len(self.cards) > 0:
+            return self.cards[0]
