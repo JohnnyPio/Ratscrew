@@ -11,22 +11,7 @@ class Player:
             hand_str += str(card) + "\n"
         return hand_str
 
-    def add_card(self, card):
-        self.cards.append(card)
-
-    def remove_top_card_from_hand(self):
-        self.cards.pop(0)
-
-    def add_cards(self, cards):
-        for card in cards:
-            self.cards.append(card)
-
-    # TODO This needs to be broken up. Perhaps moved into game. And have the notify observer here.
-    def flip_single_card(self):
-        flipped_card = self.get_top_card_of_player()
-        print(f"{self.name}'s flipped cards is {flipped_card}")
-        return flipped_card
-
+### GET/SET Methods
     def set_as_slapped(self):
         self.has_slapped = True
 
@@ -45,3 +30,20 @@ class Player:
     def get_top_card_of_player(self):
         if len(self.cards) > 0:
             return self.cards[0]
+
+### OTHER METHODS
+    def add_card(self, card):
+        self.cards.append(card)
+
+    def remove_top_card_from_hand(self):
+        self.cards.pop(0)
+
+    def add_cards(self, cards):
+        for card in cards:
+            self.cards.append(card)
+
+    def flip_single_card(self):
+        flipped_card = self.get_top_card_of_player()
+        print(f"{self.name}'s flipped cards is {flipped_card}")
+        return flipped_card
+
