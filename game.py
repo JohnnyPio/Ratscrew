@@ -81,6 +81,7 @@ class Game:
         self.set_current_player(self.get_sole_bot_player())
         self.flip_add_to_pile_then_remove_and_delay()
 
+    #TODO Fix Bug that player flips twice after winning
     def player_wins_the_pile(self, player):
         self.pile.shuffle()
         self.set_current_player(player)
@@ -90,7 +91,7 @@ class Game:
         print(f"{self.players[1].name} has {self.players[1].get_number_of_cards()}")
         self.pile.empty()
         self.flip_add_to_pile_then_remove_and_delay()
-        self.get_next_player_from_current_player()
+        # self.get_next_player_from_current_player()
 
     # TODO Break this up
     def can_complete_flipping_for_royals(self):
@@ -125,9 +126,11 @@ class Game:
             print("Slap time")
             # self.stop_dealing()
             # Analyze the slap
+            print("Bot Player Slaps")
+            self.player_wins_the_pile(self.get_sole_bot_player())
+            # TODO There is a bug of multiple flips after win/dealing ends
             # Act accordingly
             # run_the_game() again
-            # TODO the game initialization needs to be tweaked for this
 
     ### OTHER METHODS
 
@@ -158,6 +161,7 @@ class Game:
     def get_sole_bot_player(self):
         return next((x for x in self.players if x.is_player_a_bot), ValueError)
 
+    # TODO Move this to Slap
     def a_bot_player_slaps(self):
         this_slap = slap.Slap()
         this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), computer_slap_delay())
