@@ -49,12 +49,7 @@ class Game:
         self.callbacks = []
         self.should_continue_dealing = True
 
-        # Initialize
-        self.shuffle_deal_full_deck_and_then_empty_pile()
-        self.current_player = players[0]
-        self.flip_add_to_pile_then_remove_and_delay()
-
-### GET/SET Methods
+    ### GET/SET Methods
     def get_index_from_player(self):
         return self.players.index(self.current_player)
 
@@ -70,7 +65,7 @@ class Game:
     def stop_dealing(self):
         self.should_continue_dealing = False
 
-### MEGA-COMBO METHODS
+    ### MEGA-COMBO METHODS
     # TODO Still probably a way to make this better named/cleaner
     def flip_add_to_pile_then_remove_and_delay(self):
         first_card = self.current_player.flip_single_card()
@@ -79,10 +74,12 @@ class Game:
         self.current_player.remove_top_card_from_hand()
         delay_between_card_flips()
 
-    def shuffle_deal_full_deck_and_then_empty_pile(self):
+    def initial_shuffle_deck_deal_then_empty_pile(self):
         self.pile.shuffle()
         self.initial_full_deck_deal_to_all_players()
         self.pile.empty()
+        self.set_current_player(self.get_sole_bot_player())
+        self.flip_add_to_pile_then_remove_and_delay()
 
     def player_wins_the_pile(self, player):
         self.pile.shuffle()
@@ -115,7 +112,7 @@ class Game:
             print("no royals here")
             return False
 
-### OBSERVE METHODS
+    ### OBSERVE METHODS
     def add_observer(self, callback):
         self.callbacks.append(callback)
 
@@ -124,15 +121,15 @@ class Game:
             callback()  # Pass the current pile to the observer
 
     def monitor_for_slaps(self):
-        if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
+        if self.is_slappable_event():
             print("Slap time")
-            self.stop_dealing()
+            # self.stop_dealing()
             # Analyze the slap
             # Act accordingly
             # run_the_game() again
             # TODO the game initialization needs to be tweaked for this
 
-### OTHER METHODS
+    ### OTHER METHODS
 
     def player_buries_their_card(self, player):
         top_player_card = player.cards[0]

@@ -27,5 +27,6 @@ def run_the_game():
 
 
 my_game = game.Game(players_hands)
+my_game.initial_shuffle_deck_deal_then_empty_pile()
 my_game.add_observer(my_game.monitor_for_slaps)
 run_the_game()
