@@ -22,6 +22,9 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
+    def get_cards(self):
+        return self.cards
+
     def empty(self):
         self.cards = []
         return self

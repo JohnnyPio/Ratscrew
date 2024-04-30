@@ -21,6 +21,9 @@ class Player:
     def get_number_of_cards(self):
         return len(self.cards)
 
+    def get_name(self):
+        return self.name
+
     def is_player_a_bot(self):
         if self.isbot:
             return True
