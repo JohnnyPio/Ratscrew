@@ -69,6 +69,9 @@ class Game:
     def stop_dealing(self):
         self.should_continue_dealing = False
 
+    def get_sole_bot_player(self):
+        return next((x for x in self.players if x.is_player_a_bot), ValueError)
+
     ### MEGA-COMBO METHODS
     # TODO Still probably a way to make this better named/cleaner
     def run_the_game(self):
@@ -162,6 +165,7 @@ class Game:
         self.pile.cards.insert(0, top_player_card)
         player.remove_card(top_player_card)
 
+    # TODO This should likely be an observability function too
     def all_players_have_cards(self):
         for player in self.players:
             if not player.cards:
@@ -180,9 +184,6 @@ class Game:
             return True
         else:
             return False
-
-    def get_sole_bot_player(self):
-        return next((x for x in self.players if x.is_player_a_bot), ValueError)
 
     # TODO Move this to Slap
     def a_bot_player_slaps(self):
