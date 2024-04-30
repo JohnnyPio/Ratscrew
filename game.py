@@ -152,10 +152,8 @@ class Game:
             print("computer Slaps")
             self.remove_observers()
             self.add_observer(self.monitor_for_slaps)
-            # TODO There is a bug where the first card after the slap isn't registering
             self.player_wins_the_pile(self.get_sole_bot_player())
-            self.set_next_player_from_current_player()
-            self.current_player.flip_single_card()
+            self.run_the_game()
 
     ### OTHER METHODS
 
