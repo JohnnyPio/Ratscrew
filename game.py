@@ -96,7 +96,6 @@ class Game:
         self.pile.shuffle()
         self.initial_full_deck_deal_to_all_players()
         self.pile.empty()
-        self.set_current_player(self.get_sole_bot_player())
         self.flip_add_to_pile_then_remove_and_delay()
 
     # TODO Fix Bug that player flips twice after winning
