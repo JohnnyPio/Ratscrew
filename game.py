@@ -73,7 +73,6 @@ class Game:
         return next((x for x in self.players if x.is_player_a_bot), ValueError)
 
     ### MEGA-COMBO METHODS
-    # TODO Still probably a way to make this better named/cleaner
     def run_the_game(self):
         both_players_have_more_than_zero_cards = True
         while both_players_have_more_than_zero_cards and self.should_continue_dealing:
@@ -84,9 +83,6 @@ class Game:
             else:
                 if not self.can_complete_flipping_for_royals():
                     self.player_wins_the_pile(self.get_previous_player_before_current_player())
-
-            if not self.all_players_have_cards():
-                break
 
     def initialize_game(self):
         self.pile.shuffle()
@@ -155,6 +151,7 @@ class Game:
             print("computer Slaps")
             self.remove_observers()
             self.add_observer(self.monitor_for_slaps)
+            self.add_observer(self.all_players_have_cards)
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
@@ -165,13 +162,12 @@ class Game:
         self.pile.cards.insert(0, top_player_card)
         player.remove_card(top_player_card)
 
-    # TODO This should likely be an observability function too
     def all_players_have_cards(self):
         for player in self.players:
             if not player.cards:
-                print(f"{player.name} loses")
-                return False
-        return True
+                print(f"{player.name} loses, game over")
+                self.stop_dealing()
+                exit()
 
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
