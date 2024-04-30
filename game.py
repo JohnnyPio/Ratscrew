@@ -53,23 +53,38 @@ class Game:
         self.current_player = None
 
     ### GET/SET Methods
+    # TODO Fishy things going on with these methods
     def get_index_from_player(self):
         return self.players.index(self.current_player)
 
-    def get_next_player_from_current_player(self):
-        self.current_player = self.players[(self.get_index_from_player() + 1) % len(self.players)]
+    def set_next_player_from_current_player(self):
+        self.set_current_player(self.players[(self.get_index_from_player() + 1) % len(self.players)])
 
     def get_previous_player_before_current_player(self):
         return self.players[(self.get_index_from_player() - 1) % len(self.players)]
 
-    def set_current_player(self, player):
-        self.current_player = player
+    def set_current_player(self, the_player: Player):
+        self.current_player = the_player
 
     def stop_dealing(self):
         self.should_continue_dealing = False
 
     ### MEGA-COMBO METHODS
     # TODO Still probably a way to make this better named/cleaner
+    def run_the_game(self):
+        both_players_have_more_than_zero_cards = True
+        while both_players_have_more_than_zero_cards and self.should_continue_dealing:
+            self.set_next_player_from_current_player()
+
+            if not card_is_royal(self.pile.get_top_card_of_deck()):
+                self.flip_add_to_pile_then_remove_and_delay()
+            else:
+                if not self.can_complete_flipping_for_royals():
+                    self.player_wins_the_pile(self.get_previous_player_before_current_player())
+
+            if not self.all_players_have_cards():
+                break
+
     def flip_add_to_pile_then_remove_and_delay(self):
         first_card = self.current_player.flip_single_card()
         self.add_card_to_pile(first_card)
@@ -84,17 +99,24 @@ class Game:
         self.set_current_player(self.get_sole_bot_player())
         self.flip_add_to_pile_then_remove_and_delay()
 
-    #TODO Fix Bug that player flips twice after winning
-    def player_wins_the_pile(self, player):
+    # TODO Fix Bug that player flips twice after winning
+    def player_wins_the_pile(self, the_player):
         self.pile.shuffle()
-        self.set_current_player(player)
-        print(f"{self.current_player.name} wins the pile")
-        self.current_player.add_cards(list(self.pile.cards))
+        self.set_current_player(the_player)
+        print(f"{self.current_player.get_name()} wins the pile")
+        self.current_player.add_cards(list(self.pile.get_cards()))
         print(f"{self.players[0].name} has {self.players[0].get_number_of_cards()}")
         print(f"{self.players[1].name} has {self.players[1].get_number_of_cards()}")
         self.pile.empty()
         self.flip_add_to_pile_then_remove_and_delay()
-        # self.get_next_player_from_current_player()
+
+    def any_royal_card_in_list(self, card_list):
+        previous_cards_in_pile = self.pile.cards[-len(card_list):]
+        if not any(card_is_royal(card) for card in previous_cards_in_pile):
+            print("no royals here")
+            return False
+        else:
+            return True
 
     # TODO Break this up
     def can_complete_flipping_for_royals(self):
@@ -112,9 +134,7 @@ class Game:
             if card_is_royal(self.pile.get_top_card_of_deck()):
                 return True
 
-        if not any(card_is_royal(card) for card in self.pile.cards[-1 * len(flipped_cards)]):
-            print("no royals here")
-            return False
+        self.any_royal_card_in_list(flipped_cards)
 
     ### OBSERVE METHODS
     def add_observer(self, callback):
@@ -124,16 +144,19 @@ class Game:
         for callback in self.callbacks:
             callback()  # Pass the current pile to the observer
 
+    def remove_observers(self):
+        self.callbacks = []
+
     def monitor_for_slaps(self):
         if self.is_slappable_event():
             print("Slap time")
-            # self.stop_dealing()
-            # Analyze the slap
-            print("Bot Player Slaps")
+            print("computer Slaps")
+            self.remove_observers()
+            self.add_observer(self.monitor_for_slaps)
+            # TODO There is a bug where the first card after the slap isn't registering
             self.player_wins_the_pile(self.get_sole_bot_player())
-            # TODO There is a bug of multiple flips after win/dealing ends
-            # Act accordingly
-            # run_the_game() again
+            self.set_next_player_from_current_player()
+            self.current_player.flip_single_card()
 
     ### OTHER METHODS
 
