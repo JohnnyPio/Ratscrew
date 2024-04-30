@@ -1,4 +1,6 @@
 import time
+
+from player import Player
 import slap
 from deck import Deck
 
@@ -48,6 +50,7 @@ class Game:
         self.pile = Deck()
         self.callbacks = []
         self.should_continue_dealing = True
+        self.current_player = None
 
     ### GET/SET Methods
     def get_index_from_player(self):
