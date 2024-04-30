@@ -12,12 +12,10 @@ players_hands.append(player_1)
 def run_the_game():
     both_players_have_more_than_zero_cards = True
     while both_players_have_more_than_zero_cards and my_game.should_continue_dealing:
-        my_game.get_next_player_from_current_player()
-        top_card = my_game.pile.get_top_card_of_deck()
+        my_game.set_next_player_from_current_player()
 
-        if not game.card_is_royal(top_card):
+        if not game.card_is_royal(my_game.pile.get_top_card_of_deck()):
             my_game.flip_add_to_pile_then_remove_and_delay()
-
         else:
             if not my_game.can_complete_flipping_for_royals():
                 my_game.player_wins_the_pile(my_game.get_previous_player_before_current_player())
