@@ -85,6 +85,13 @@ class Game:
             if not self.all_players_have_cards():
                 break
 
+    def initialize_game(self):
+        self.pile.shuffle()
+        self.initial_full_deck_deal_to_all_players()
+        self.pile.empty()
+        self.set_current_player(self.get_sole_bot_player())
+        self.flip_add_to_pile_then_remove_and_delay()
+
     def flip_add_to_pile_then_remove_and_delay(self):
         first_card = self.current_player.flip_single_card()
         self.add_card_to_pile(first_card)
@@ -92,13 +99,6 @@ class Game:
         self.current_player.remove_top_card_from_hand()
         delay_between_card_flips()
 
-    def initial_shuffle_deck_deal_then_empty_pile(self):
-        self.pile.shuffle()
-        self.initial_full_deck_deal_to_all_players()
-        self.pile.empty()
-        self.flip_add_to_pile_then_remove_and_delay()
-
-    # TODO Fix Bug that player flips twice after winning
     def player_wins_the_pile(self, the_player):
         self.pile.shuffle()
         self.set_current_player(the_player)
