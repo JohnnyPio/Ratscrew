@@ -31,28 +31,15 @@ def card_is_royal(card):
         return False
 
 
-# TODO The two below won't be static once the difficulty attribute is created
-def delay_between_card_flips():
-    # Should change based on easy,med,hard
-    delay = 1  # x second delay
-    time.sleep(delay)
-
-
-def computer_slap_delay():
-    # Should change based on easy,med,hard
-    delay = 0.5  # x second delay
-    # time.sleep(delay)
-    return delay
-
-
 class Game:
-    def __init__(self, players):
+    def __init__(self, players, difficulty):
         self.players = players
         self.pile = Deck()
         self.observe_for_slap_opportunity = Observer()
         self.observe_for_human_slap = Observer()
         self.should_continue_dealing = True
         self.current_player = None
+        self.difficulty = difficulty
 
     def monitor_for_slap_opportunity(self):
         if self.is_slappable_event():
@@ -61,6 +48,7 @@ class Game:
             self.observe_for_slap_opportunity.remove_observers()
             self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
             self.observe_for_slap_opportunity.add_observer(self.all_players_have_cards)
+            # TODO Not sure why this is showing a warning now?? Check git
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
@@ -105,7 +93,7 @@ class Game:
         self.observe_for_slap_opportunity.notify_observers()
         self.add_card_to_pile(first_card)
         self.current_player.remove_top_card_from_hand()
-        delay_between_card_flips()
+        self.delay_between_card_flips()
 
     def add_card_to_pile(self, flipped_card):
         self.pile.add_card(flipped_card)
@@ -181,6 +169,40 @@ class Game:
         previous_player_index = (self.get_index_from_player() - 1) % len(self.players)
         return self.players[previous_player_index]
 
+    # Delay stuff
+    def is_difficulty_easy(self):
+        return self.difficulty == "1"
+
+    def is_difficulty_medium(self):
+        return self.difficulty == "2"
+
+    def is_difficulty_hard(self):
+        return self.difficulty == "3"
+
+    def delay_between_card_flips(self):
+        delay = 0
+        if self.is_difficulty_easy:
+            delay = 1
+        elif self.is_difficulty_medium:
+            delay = .85
+        elif self.is_difficulty_hard:
+            delay = .7
+        else:
+            ValueError()
+        time.sleep(delay)
+
+    def computer_slap_delay(self):
+        delay = 0
+        if self.is_difficulty_easy:
+            delay = 1
+        elif self.is_difficulty_medium:
+            delay = .75
+        elif self.is_difficulty_hard:
+            delay = .5
+        else:
+            ValueError()
+        return delay
+
     # These aren't used yet
 
     def player_buries_their_card(self, player):
@@ -197,5 +219,5 @@ class Game:
     # TODO Move this to Slap
     def a_bot_player_slaps(self):
         this_slap = slap.Slap()
-        this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), computer_slap_delay())
+        this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), self.computer_slap_delay())
         self.get_sole_bot_player().set_as_slapped()
