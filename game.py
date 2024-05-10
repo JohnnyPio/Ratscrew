@@ -54,6 +54,16 @@ class Game:
         self.should_continue_dealing = True
         self.current_player = None
 
+    def run_the_game(self):
+        while self.should_continue_dealing:
+            self.set_next_player_from_current_player()
+
+            if not card_is_royal(self.pile.get_top_card_of_deck()):
+                self.flip_add_to_pile_then_remove_and_delay()
+            else:
+                if not self.can_complete_flipping_for_royals():
+                    self.player_wins_the_pile(self.get_previous_player_before_current_player())
+
     ### GET/SET Methods
     # TODO Fishy things going on with these methods
     def get_index_from_player(self):
@@ -74,17 +84,7 @@ class Game:
     def get_sole_bot_player(self):
         return next((x for x in self.players if x.is_player_a_bot), ValueError)
 
-    ### MEGA-COMBO METHODS
-    def run_the_game(self):
-        both_players_have_more_than_zero_cards = True
-        while both_players_have_more_than_zero_cards and self.should_continue_dealing:
-            self.set_next_player_from_current_player()
 
-            if not card_is_royal(self.pile.get_top_card_of_deck()):
-                self.flip_add_to_pile_then_remove_and_delay()
-            else:
-                if not self.can_complete_flipping_for_royals():
-                    self.player_wins_the_pile(self.get_previous_player_before_current_player())
 
     def initialize_game(self):
         self.pile.shuffle()
