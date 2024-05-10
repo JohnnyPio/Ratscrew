@@ -40,6 +40,6 @@ class Deck:
         if len(self.cards) >= 3 and self.cards[-1][0] == self.cards[-3][0]:
             return True
 
-    def get_top_card_of_deck(self):
+    def get_top_card(self):
         if len(self.cards) > 0:
             return self.cards[-1]

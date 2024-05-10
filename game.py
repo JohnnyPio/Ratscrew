@@ -54,89 +54,6 @@ class Game:
         self.should_continue_dealing = True
         self.current_player = None
 
-    def run_the_game(self):
-        while self.should_continue_dealing:
-            self.set_next_player_from_current_player()
-
-            if not card_is_royal(self.pile.get_top_card_of_deck()):
-                self.flip_add_to_pile_then_remove_and_delay()
-            else:
-                if not self.can_complete_flipping_for_royals():
-                    self.player_wins_the_pile(self.get_previous_player_before_current_player())
-
-    ### GET/SET Methods
-    # TODO Fishy things going on with these methods
-    def get_index_from_player(self):
-        return self.players.index(self.current_player)
-
-    def set_next_player_from_current_player(self):
-        self.set_current_player(self.players[(self.get_index_from_player() + 1) % len(self.players)])
-
-    def get_previous_player_before_current_player(self):
-        return self.players[(self.get_index_from_player() - 1) % len(self.players)]
-
-    def set_current_player(self, the_player: Player):
-        self.current_player = the_player
-
-    def stop_dealing(self):
-        self.should_continue_dealing = False
-
-    def get_sole_bot_player(self):
-        return next((x for x in self.players if x.is_player_a_bot), ValueError)
-
-
-
-    def initialize_game(self):
-        self.pile.shuffle()
-        self.initial_full_deck_deal_to_all_players()
-        self.pile.empty()
-        self.set_current_player(self.get_sole_bot_player())
-        self.flip_add_to_pile_then_remove_and_delay()
-
-    def flip_add_to_pile_then_remove_and_delay(self):
-        first_card = self.current_player.flip_single_card()
-        self.add_card_to_pile(first_card)
-        self.observe_for_slap_opportunity.notify_observers()
-        self.current_player.remove_top_card_from_hand()
-        delay_between_card_flips()
-
-    def player_wins_the_pile(self, the_player):
-        self.pile.shuffle()
-        self.set_current_player(the_player)
-        print(f"{self.current_player.get_name()} wins the pile")
-        self.current_player.add_cards(list(self.pile.get_cards()))
-        print(f"{self.players[0].name} has {self.players[0].get_number_of_cards()}")
-        print(f"{self.players[1].name} has {self.players[1].get_number_of_cards()}")
-        self.pile.empty()
-        self.flip_add_to_pile_then_remove_and_delay()
-
-    def any_royal_card_in_list(self, card_list):
-        previous_cards_in_pile = self.pile.cards[-len(card_list):]
-        if not any(card_is_royal(card) for card in previous_cards_in_pile):
-            print("no royals here")
-            return False
-        else:
-            return True
-
-    # TODO Break this up
-    def can_complete_flipping_for_royals(self):
-        last_card = self.pile.get_top_card_of_deck()
-        max_cards = max_cards_to_flip(last_card)
-        flipped_cards = []
-        for _ in range(max_cards):
-            if not self.pile.cards:
-                print("out of cards")
-                return False
-
-            self.flip_add_to_pile_then_remove_and_delay()
-            flipped_cards.append(self.pile.get_top_card_of_deck())
-
-            if card_is_royal(self.pile.get_top_card_of_deck()):
-                return True
-
-        self.any_royal_card_in_list(flipped_cards)
-
-    ### OBSERVE METHODS
     def monitor_for_slaps(self):
         if self.is_slappable_event():
             print("Slap time")
@@ -147,12 +64,11 @@ class Game:
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
-    ### OTHER METHODS
-
-    def player_buries_their_card(self, player):
-        top_player_card = player.cards[0]
-        self.pile.cards.insert(0, top_player_card)
-        player.remove_card(top_player_card)
+    def is_slappable_event(self):
+        if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
+            return True
+        else:
+            return False
 
     def all_players_have_cards(self):
         for player in self.players:
@@ -161,26 +77,45 @@ class Game:
                 self.stop_dealing()
                 exit()
 
-    def is_slappable_event(self):
-        if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
-            return True
-        else:
-            return False
+    def stop_dealing(self):
+        self.should_continue_dealing = False
 
-    def any_player_has_slapped(self):
-        if any(player.set_as_slapped for player in self.players):
-            return True
-        else:
-            return False
+    def get_sole_bot_player(self):
+        return next((x for x in self.players if x.is_player_a_bot))
 
-    # TODO Move this to Slap
-    def a_bot_player_slaps(self):
-        this_slap = slap.Slap()
-        this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), computer_slap_delay())
-        self.get_sole_bot_player().set_as_slapped()
+    def player_wins_the_pile(self, the_player: Player):
+        self.pile.shuffle()
+        self.set_current_player(the_player)
+        print(f"{self.current_player.get_name()} wins the pile")
+        self.current_player.add_cards(list(self.pile.get_cards()))
+        self.print_player_and_number_of_cards(0)
+        self.print_player_and_number_of_cards(1)
+        self.pile.empty()
+        self.flip_add_to_pile_then_remove_and_delay()
+
+    def set_current_player(self, the_player: Player):
+        self.current_player = the_player
+
+    # TODO Maybe just make this static and print both players
+    def print_player_and_number_of_cards(self, index):
+        print(f"{self.players[index].name} has {self.players[index].get_number_of_cards()}")
+
+    def flip_add_to_pile_then_remove_and_delay(self):
+        first_card = self.current_player.flip_single_card()
+        self.add_card_to_pile(first_card)
+        self.observe_for_slap_opportunity.notify_observers()
+        self.current_player.remove_top_card_from_hand()
+        delay_between_card_flips()
 
     def add_card_to_pile(self, flipped_card):
         self.pile.add_card(flipped_card)
+
+    def initialize_game(self):
+        self.pile.shuffle()
+        self.initial_full_deck_deal_to_all_players()
+        self.pile.empty()
+        self.set_current_player(self.get_sole_bot_player())
+        self.flip_add_to_pile_then_remove_and_delay()
 
     def initial_full_deck_deal_to_all_players(self):
         num_players = len(self.players)
@@ -194,3 +129,73 @@ class Game:
 
         for a_player in self.players:
             a_player.cards = player_hands[a_player.name]
+
+    def run_the_game(self):
+        while self.should_continue_dealing:
+            self.set_next_player_from_current_player()
+
+            if not card_is_royal(self.pile.get_top_card()):
+                self.flip_add_to_pile_then_remove_and_delay()
+            else:
+                if not self.can_complete_flipping_for_royals():
+                    self.player_wins_the_pile(self.get_previous_player_before_current_player())
+
+    def set_next_player_from_current_player(self):
+        next_player_index = (self.get_index_from_player() + 1) % len(self.players)
+        self.set_current_player(self.players[next_player_index])
+
+    def get_index_from_player(self):
+        return self.players.index(self.current_player)
+
+    # TODO Break this up
+    def can_complete_flipping_for_royals(self):
+        last_card = self.pile.get_top_card()
+        max_cards = max_cards_to_flip(last_card)
+        flipped_cards = []
+        for _ in range(max_cards):
+            if not self.pile.cards:
+                print("out of cards")
+                return False
+
+            self.flip_add_to_pile_then_remove_and_delay()
+            flipped_cards.append(self.pile.get_top_card())
+
+            if card_is_royal(self.pile.get_top_card()):
+                return True
+
+        self.any_royal_card_in_list(flipped_cards)
+
+    def any_royal_card_in_list(self, card_list):
+        previous_cards_in_pile = self.get_previous_pile_card(card_list)
+        if not any(card_is_royal(card) for card in previous_cards_in_pile):
+            print("no royals here")
+            return False
+        else:
+            return True
+
+    # TODO Odd behavior for this one
+    def get_previous_pile_card(self, card_list):
+        return self.pile.cards[-len(card_list):]
+
+    def get_previous_player_before_current_player(self):
+        previous_player_index = (self.get_index_from_player() - 1) % len(self.players)
+        return self.players[previous_player_index]
+
+    # These aren't used yet
+
+    def player_buries_their_card(self, player):
+        top_player_card = player.cards[0]
+        self.pile.cards.insert(0, top_player_card)
+        player.remove_card(top_player_card)
+
+    def any_player_has_slapped(self):
+        if any(player.set_as_slapped for player in self.players):
+            return True
+        else:
+            return False
+
+    # TODO Move this to Slap
+    def a_bot_player_slaps(self):
+        this_slap = slap.Slap()
+        this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), computer_slap_delay())
+        self.get_sole_bot_player().set_as_slapped()
