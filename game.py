@@ -102,8 +102,8 @@ class Game:
 
     def flip_add_to_pile_then_remove_and_delay(self):
         first_card = self.current_player.flip_single_card()
-        self.add_card_to_pile(first_card)
         self.observe_for_slap_opportunity.notify_observers()
+        self.add_card_to_pile(first_card)
         self.current_player.remove_top_card_from_hand()
         delay_between_card_flips()
 
