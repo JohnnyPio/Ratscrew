@@ -180,7 +180,7 @@ class Game:
         return self.difficulty == "3"
 
     def delay_between_card_flips(self):
-        delay = 0
+        delay = int
         if self.is_difficulty_easy:
             delay = 1
         elif self.is_difficulty_medium:
@@ -192,7 +192,7 @@ class Game:
         time.sleep(delay)
 
     def computer_slap_delay(self):
-        delay = 0
+        delay = int
         if self.is_difficulty_easy:
             delay = 1
         elif self.is_difficulty_medium:
