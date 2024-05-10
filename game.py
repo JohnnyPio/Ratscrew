@@ -54,12 +54,12 @@ class Game:
         self.should_continue_dealing = True
         self.current_player = None
 
-    def monitor_for_slaps(self):
+    def monitor_for_slap_opportunity(self):
         if self.is_slappable_event():
             print("Slap time")
             print("computer Slaps")
             self.observe_for_slap_opportunity.remove_observers()
-            self.observe_for_slap_opportunity.add_observer(self.monitor_for_slaps)
+            self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
             self.observe_for_slap_opportunity.add_observer(self.all_players_have_cards)
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
