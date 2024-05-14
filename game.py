@@ -86,8 +86,7 @@ class Game:
         self.set_current_player(the_player)
         print(f"{self.current_player.get_name()} wins the pile")
         self.current_player.add_cards(list(self.pile.get_cards()))
-        self.print_player_and_number_of_cards(0)
-        self.print_player_and_number_of_cards(1)
+        self.print_players_and_number_of_cards()
         self.pile.empty()
         self.flip_add_to_pile_then_remove_and_delay()
 
@@ -229,6 +228,9 @@ class Game:
             return True
         else:
             return False
+
+    def get_sole_human_player(self):
+        return self.players[1]
 
     # TODO Move this to Slap
     def a_bot_player_slaps(self):
