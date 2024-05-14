@@ -1,5 +1,7 @@
 import time
 
+import keyboard
+
 from player import Player
 import slap
 from deck import Deck
@@ -29,6 +31,14 @@ def card_is_royal(card):
         return True
     else:
         return False
+
+
+def human_slaps():
+    if not keyboard.read_key() == 'space':
+        return False
+    else:
+        print("Human slap time")
+        return True
 
 
 class Game:
