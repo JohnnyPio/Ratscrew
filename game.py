@@ -94,6 +94,10 @@ class Game:
     def set_current_player(self, the_player: Player):
         self.current_player = the_player
 
+    def print_players_and_number_of_cards(self):
+        self.print_player_and_number_of_cards(0)
+        self.print_player_and_number_of_cards(1)
+
     # TODO Maybe just make this static and print both players
     def print_player_and_number_of_cards(self, index):
         print(f"{self.players[index].name} has {self.players[index].get_number_of_cards()}")
