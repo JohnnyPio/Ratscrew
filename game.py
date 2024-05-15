@@ -62,13 +62,18 @@ class Game:
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
+    #TODO This isn't working, maybe it can be combined into a single monitor method but then if branches should be separated
     def monitor_for_human_slap(self):
         if human_slaps():
             print("Human slap time")
             self.observe_for_human_slap.remove_observers()
             self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
-            self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
-            self.player_buries_their_card(self.get_sole_human_player())
+            if not self.is_slappable_event():
+                human = self.get_sole_human_player()
+                self.player_buries_their_card(human)
+                self.print_players_and_number_of_cards()
+            else:
+                print("we got a standoff here")
             self.run_the_game()
 
     def is_slappable_event(self):
