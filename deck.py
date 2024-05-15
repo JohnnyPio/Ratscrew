@@ -33,13 +33,22 @@ class Deck:
         self.cards.append(card)
 
     def matching_top_cards(self):
-        if len(self.cards) >= 2 and self.cards[-1][0] == self.cards[-2][0]:
+        if (self.number_of_cards_greater_than_or_equal_to(2)
+                and self.get_card_value_from_index(-1) == self.get_card_value_from_index(-2)):
             return True
 
     def matching_sandwich_cards(self):
-        if len(self.cards) >= 3 and self.cards[-1][0] == self.cards[-3][0]:
+        if (self.number_of_cards_greater_than_or_equal_to(3)
+                and self.get_card_value_from_index(-1) == self.get_card_value_from_index(-3)):
             return True
 
     def get_top_card(self):
         if len(self.cards) > 0:
             return self.cards[-1]
+
+    def number_of_cards_greater_than_or_equal_to(self, number):
+        if len(self.cards) >= number:
+            return True
+
+    def get_card_value_from_index(self, card_index):
+        return self.cards[card_index][0]
