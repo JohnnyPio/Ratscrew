@@ -62,6 +62,15 @@ class Game:
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
+    def monitor_for_human_slap(self):
+        if human_slaps():
+            print("Human slap time")
+            self.observe_for_human_slap.remove_observers()
+            self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
+            self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
+            self.player_buries_their_card(self.get_sole_human_player())
+            self.run_the_game()
+
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
             return True
@@ -229,6 +238,7 @@ class Game:
         else:
             return False
 
+    #TODO Fix this to be not hacky, similar to bot method
     def get_sole_human_player(self):
         return self.players[1]
 
