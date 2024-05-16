@@ -32,13 +32,18 @@ def card_is_royal(card):
     else:
         return False
 
-
+# TODO something needs to be done with timing so this is constantly being
 def human_slaps():
     if not keyboard.read_key() == 'space':
-        return False
+        print("none pressed")
     else:
-        print("Human slap time")
-        return True
+        print('space was pressed, continuing...')
+    # if not keyboard.is_pressed('space'):
+    #     return False
+    # else:
+    #     print("Human slap time")
+    #     return True
+
 
 
 class Game:
@@ -60,14 +65,17 @@ class Game:
         if self.is_slappable_event():
             print("Slap time")
             print("computer Slaps")
+            # TODO merge with human slap, probably with a class
             self.observe_for_slap_opportunity.remove_observers()
             self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
-    #TODO This isn't working, maybe it can be combined into a single monitor method but then if branches should be separated
+    #TODO This isn't working
     def monitor_for_human_slap(self):
-        if human_slaps():
+        if keyboard.read_key() != 'space':
+            self.observe_for_human_slap.remove_observers()
+        else:
             print("Human slap time")
             self.observe_for_human_slap.remove_observers()
             self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
@@ -128,7 +136,7 @@ class Game:
 
     def notify_all_observers(self):
         self.observe_for_slap_opportunity.notify_observers()
-        # self.observe_for_human_slap.notify_observers()
+        self.observe_for_human_slap.notify_observers()
         self.observe_for_end_game.notify_observers()
 
     def add_card_to_pile(self, flipped_card):
@@ -136,7 +144,7 @@ class Game:
 
     def initialize_observers(self):
         self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
-        # self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
+        self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
         self.observe_for_end_game.add_observer(self.a_player_is_out_of_cards)
 
     def initialize_game(self):
