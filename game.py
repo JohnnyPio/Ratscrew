@@ -52,11 +52,9 @@ class Game:
         self.current_player = None
         self.difficulty = difficulty
 
+    # TODO maybe a better way to move the exit code up a level?
     def monitor_for_end_game(self):
-        if self.all_players_have_cards():
-            pass
-        else:
-            exit()
+        self.a_player_is_out_of_cards()
 
     def monitor_for_slap_opportunity(self):
         if self.is_slappable_event():
@@ -87,7 +85,8 @@ class Game:
         else:
             return False
 
-    def all_players_have_cards(self):
+    # TODO This should probably return a Boolean and move the logic up
+    def a_player_is_out_of_cards(self):
         for player in self.players:
             if player.get_number_of_cards() == 0:
                 print(f"{player.name} loses, game over")
@@ -138,7 +137,7 @@ class Game:
     def initialize_observers(self):
         self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
         # self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
-        self.observe_for_end_game.add_observer(self.all_players_have_cards)
+        self.observe_for_end_game.add_observer(self.a_player_is_out_of_cards)
 
     def initialize_game(self):
         self.initialize_observers()
