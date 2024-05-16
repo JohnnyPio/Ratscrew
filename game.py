@@ -57,7 +57,6 @@ class Game:
             print("computer Slaps")
             self.observe_for_slap_opportunity.remove_observers()
             self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
-            self.observe_for_slap_opportunity.add_observer(self.all_players_have_cards)
             # TODO Not sure why this is showing a warning now?? Check git
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
@@ -197,6 +196,7 @@ class Game:
         return self.players[previous_player_index]
 
     # Delay stuff
+    # TODO Turn these into Enums instead of numbers
     def is_difficulty_easy(self):
         return self.difficulty == "1"
 
@@ -206,26 +206,33 @@ class Game:
     def is_difficulty_hard(self):
         return self.difficulty == "3"
 
+    def is_difficulty_godlike(self):
+        return self.difficulty == "5"
+
     def delay_between_card_flips(self):
         delay = int
-        if self.is_difficulty_easy:
+        if self.is_difficulty_easy():
             delay = 1
-        elif self.is_difficulty_medium:
+        elif self.is_difficulty_medium():
             delay = .85
-        elif self.is_difficulty_hard:
+        elif self.is_difficulty_hard():
             delay = .7
+        elif self.is_difficulty_godlike():
+            delay = .1
         else:
             ValueError()
         time.sleep(delay)
 
     def computer_slap_delay(self):
         delay = int
-        if self.is_difficulty_easy:
+        if self.is_difficulty_easy():
             delay = 1
-        elif self.is_difficulty_medium:
-            delay = .75
-        elif self.is_difficulty_hard:
-            delay = .5
+        elif self.is_difficulty_medium():
+            delay = .85
+        elif self.is_difficulty_hard():
+            delay = .70
+        elif self.is_difficulty_godlike():
+            delay = .50
         else:
             ValueError()
         return delay
