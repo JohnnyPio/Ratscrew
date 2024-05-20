@@ -1,7 +1,5 @@
 import time
-
-import keyboard
-
+from pynput import keyboard
 from player import Player
 import slap
 from deck import Deck
@@ -32,9 +30,10 @@ def card_is_royal(card):
     else:
         return False
 
+
 # TODO something needs to be done with timing so this is constantly being
 def human_slaps():
-    if not keyboard.read_key() == 'space':
+    if keyboard.Key.space:
         print("none pressed")
     else:
         print('space was pressed, continuing...')
@@ -43,7 +42,6 @@ def human_slaps():
     # else:
     #     print("Human slap time")
     #     return True
-
 
 
 class Game:
@@ -71,21 +69,29 @@ class Game:
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
-    #TODO This isn't working
+    # TODO This isn't working
     def monitor_for_human_slap(self):
-        if keyboard.read_key() != 'space':
-            self.observe_for_human_slap.remove_observers()
-        else:
-            print("Human slap time")
-            self.observe_for_human_slap.remove_observers()
-            self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
-            if not self.is_slappable_event():
-                human = self.get_sole_human_player()
-                self.player_buries_their_card(human)
-                self.print_players_and_number_of_cards()
+        with keyboard.Events() as events:
+            # TODO the below timeout should match the slap delay
+            event = events.get(1.0)
+            if event is None:
+                pass
+            elif event.key == keyboard.Key.space:
+                self.stop_dealing()
+                print("hooray a human slap!")
+                # self.observe_for_human_slap.remove_observers()
+                # self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
+                # TODO need to integrate this in with the existing computer slap. I think it's time for the slap class
+                if not self.is_slappable_event():
+                    human = self.get_sole_human_player()
+                    self.player_buries_their_card(human)
+                    print("bury a card")
+                    self.print_players_and_number_of_cards()
+                else:
+                    print("we got a standoff here")
+                self.run_the_game()
             else:
-                print("we got a standoff here")
-            self.run_the_game()
+                print('Received event {}'.format(event))
 
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
@@ -274,7 +280,7 @@ class Game:
         else:
             return False
 
-    #TODO Fix this to be not hacky, similar to bot method
+    # TODO Fix this to be not hacky, similar to bot method
     def get_sole_human_player(self):
         return self.players[1]
 

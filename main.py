@@ -11,6 +11,6 @@ players_hands.append(player_1)
 difficulty = input("Set game difficulty (1 = Easy | 2 = Medium | 3 = Hard): ")
 
 my_game = game.Game(players_hands, difficulty)
-# TODO Monitor for human slap not working
+# TODO Human slap needs integration into a general slap class, 1 class can be created per game instance
 my_game.initialize_game()
 my_game.run_the_game()
