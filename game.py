@@ -144,18 +144,18 @@ class Game:
 
     def initialize_observers(self):
         self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
-        self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
+        # self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
         self.observe_for_end_game.add_observer(self.a_player_is_out_of_cards)
 
     def initialize_game(self):
         self.initialize_observers()
         self.pile.shuffle()
-        self.initial_full_deck_deal_to_all_players()
+        self.full_deck_deal_to_all_players()
         self.pile.empty()
         self.set_current_player(self.get_sole_bot_player())
         self.flip_add_to_pile_then_remove_and_delay()
 
-    def initial_full_deck_deal_to_all_players(self):
+    def full_deck_deal_to_all_players(self):
         num_players = len(self.players)
         player_index = 0
         player_hands = {a_player.name: [] for a_player in self.players}
