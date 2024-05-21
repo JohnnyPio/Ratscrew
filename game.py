@@ -31,19 +31,6 @@ def card_is_royal(card):
         return False
 
 
-# TODO something needs to be done with timing so this is constantly being
-def human_slaps():
-    if keyboard.Key.space:
-        print("none pressed")
-    else:
-        print('space was pressed, continuing...')
-    # if not keyboard.is_pressed('space'):
-    #     return False
-    # else:
-    #     print("Human slap time")
-    #     return True
-
-
 class Game:
     def __init__(self, players, difficulty):
         self.players = players
@@ -64,12 +51,10 @@ class Game:
             print("Slap time")
             print("computer Slaps")
             # TODO merge with human slap, probably with a class
-            self.observe_for_slap_opportunity.remove_observers()
-            self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
             self.player_wins_the_pile(self.get_sole_bot_player())
             self.run_the_game()
 
-    # TODO This isn't working
+    # TODO Refactor human_slap into it's own method
     def monitor_for_human_slap(self):
         with keyboard.Events() as events:
             # TODO the below timeout should match the slap delay
@@ -77,10 +62,7 @@ class Game:
             if event is None:
                 pass
             elif event.key == keyboard.Key.space:
-                self.stop_dealing()
                 print("hooray a human slap!")
-                # self.observe_for_human_slap.remove_observers()
-                # self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
                 # TODO need to integrate this in with the existing computer slap. I think it's time for the slap class
                 if not self.is_slappable_event():
                     human = self.get_sole_human_player()
@@ -89,7 +71,6 @@ class Game:
                     self.print_players_and_number_of_cards()
                 else:
                     print("we got a standoff here")
-                self.run_the_game()
             else:
                 print('Received event {}'.format(event))
 
@@ -150,7 +131,7 @@ class Game:
 
     def initialize_observers(self):
         self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
-        # self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
+        self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
         self.observe_for_end_game.add_observer(self.a_player_is_out_of_cards)
 
     def initialize_game(self):
@@ -272,7 +253,7 @@ class Game:
     def player_buries_their_card(self, player):
         top_player_card = player.cards[0]
         self.pile.cards.insert(0, top_player_card)
-        player.remove_card(top_player_card)
+        player.remove_top_card_from_hand()
 
     def any_player_has_slapped(self):
         if any(player.set_as_slapped for player in self.players):
