@@ -62,18 +62,20 @@ class Game:
             event = events.get(1.0)
             if event is None:
                 pass
+            # TODO need to integrate this in with the existing computer slap. I think it's time for the slap class
             elif event.key == keyboard.Key.space:
                 print("hooray a human slap!")
-                # TODO need to integrate this in with the existing computer slap. I think it's time for the slap class
+                self.create_slap_event()
+                human = self.get_sole_human_player()
+                #TODO Get the time it took to slap and pass that into the below method
+                self.current_slap.add_player_to_slap_pile(human)
                 if not self.is_slappable_event():
-                    human = self.get_sole_human_player()
                     self.player_buries_their_card(human)
                     print("bury a card")
                     self.print_players_and_number_of_cards()
                 else:
                     print("we got a standoff here")
-            else:
-                print('Received event {}'.format(event))
+                self.remove_slap_event()
 
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
@@ -281,4 +283,6 @@ class Game:
         else:
             return False
 
+    def remove_slap_event(self):
+        self.current_slap = None
 
