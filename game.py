@@ -41,6 +41,7 @@ class Game:
         self.should_continue_dealing = True
         self.current_player = None
         self.difficulty = difficulty
+        self.current_slap = None
 
     # TODO maybe a better way to move the exit code up a level?
     def monitor_for_end_game(self):
@@ -270,3 +271,14 @@ class Game:
         this_slap = slap.Slap()
         this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), self.computer_slap_delay())
         self.get_sole_bot_player().set_as_slapped()
+
+    def create_slap_event(self):
+        self.current_slap = slap.Slap()
+
+    def is_current_slap_event(self):
+        if self.current_slap:
+            return True
+        else:
+            return False
+
+
