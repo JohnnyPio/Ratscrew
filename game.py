@@ -50,10 +50,15 @@ class Game:
 
     def monitor_for_slap_opportunity(self):
         if self.is_slappable_event():
-            print("Slap time")
+            if not self.is_current_slap_event():
+                self.create_slap_event()
             print("computer Slaps")
-            # TODO merge with human slap, probably with a class
-            self.player_wins_the_pile(self.get_sole_bot_player())
+            bot_player = self.get_sole_bot_player()
+            # TODO Fix bug where royal pile has slappable event and clobbers slap opp
+            # TODO the second arg below should reflect the game difficulty
+            self.current_slap.add_player_and_slaptime_to_slap(bot_player, 0.9)
+            winner_of_slap = self.current_slap.get_name_of_slap_winner()
+            self.player_wins_the_pile(winner_of_slap)
             self.run_the_game()
 
     # TODO Refactor human_slap into it's own method
@@ -65,17 +70,21 @@ class Game:
                 pass
             # TODO need to integrate this in with the existing computer slap. I think it's time for the slap class
             elif event.key == keyboard.Key.space:
+                key_press_time = time.time()
                 print("hooray a human slap!")
-                self.create_slap_event()
+                if not self.is_current_slap_event():
+                    self.create_slap_event()
                 human = self.get_sole_human_player()
-                #TODO Get the time it took to slap and pass that into the below method
-                self.current_slap.add_player_to_slap_pile(human)
+                duration = key_press_time - self.last_card_flip_time
+                self.current_slap.add_player_and_slaptime_to_slap(human, duration)
                 if not self.is_slappable_event():
                     self.player_buries_their_card(human)
                     print("bury a card")
                     self.print_players_and_number_of_cards()
                 else:
                     print("we got a standoff here")
+                    winner_of_slap = self.current_slap.get_name_of_slap_winner()
+                    self.player_wins_the_pile(winner_of_slap)
                 self.remove_slap_event()
 
     def is_slappable_event(self):
@@ -135,8 +144,8 @@ class Game:
         self.pile.add_card(flipped_card)
 
     def initialize_observers(self):
-        self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
         self.observe_for_human_slap.add_observer(self.monitor_for_human_slap)
+        self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
         self.observe_for_end_game.add_observer(self.a_player_is_out_of_cards)
 
     def initialize_game(self):
@@ -273,7 +282,7 @@ class Game:
     # TODO Move this to Slap
     def a_bot_player_slaps(self):
         this_slap = slap.Slap()
-        this_slap.add_player_to_slap_pile(self.get_sole_bot_player(), self.computer_slap_delay())
+        this_slap.add_player_and_slaptime_to_slap(self.get_sole_bot_player(), self.computer_slap_delay())
         self.get_sole_bot_player().set_as_slapped()
 
     def create_slap_event(self):
