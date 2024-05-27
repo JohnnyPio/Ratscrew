@@ -11,7 +11,7 @@ players_hands.append(player_1)
 difficulty = input("Set game difficulty (1 = Easy | 2 = Medium | 3 = Hard): ")
 
 my_game = game.Game(players_hands, difficulty)
-# TODO Human slap needs integration into a general slap class, 1 class can be created per game instance
-# TODO Measure human slap time
+# TODO Combine two slap observer functions into a single observer function. Either it will be a human dud slap,
+#  a computer only slap, or a slap-off
 my_game.initialize_game()
 my_game.run_the_game()
