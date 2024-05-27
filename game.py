@@ -42,6 +42,7 @@ class Game:
         self.current_player = None
         self.difficulty = difficulty
         self.current_slap = None
+        self.last_card_flip_time = None
 
     # TODO maybe a better way to move the exit code up a level?
     def monitor_for_end_game(self):
@@ -121,6 +122,7 @@ class Game:
         self.notify_all_observers()
         first_card = self.current_player.flip_single_card()
         self.add_card_to_pile(first_card)
+        self.last_card_flip_time = time.time()
         self.current_player.remove_top_card_from_hand()
         self.delay_between_card_flips()
 
