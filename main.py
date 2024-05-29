@@ -11,7 +11,6 @@ players_hands.append(player_1)
 difficulty = input("Set game difficulty (1 = Easy | 2 = Medium | 3 = Hard): ")
 
 my_game = game.Game(players_hands, difficulty)
-# TODO Combine two slap observer functions into a single observer function. Either it will be a human dud slap,
-#  a computer only slap, or a slap-off
+# TODO Fix bug where royal pile has slappable event and clobbers slap opp
 my_game.initialize_game()
 my_game.run_the_game()
