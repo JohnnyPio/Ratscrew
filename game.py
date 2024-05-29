@@ -206,7 +206,9 @@ class Game:
 
             if card_is_royal(self.pile.get_top_card()):
                 return True
-        self.any_royal_card_in_list(flipped_cards)
+
+        if not self.is_slappable_event():
+            self.any_royal_card_in_list(flipped_cards)
 
     def any_royal_card_in_list(self, card_list):
         previous_cards_in_pile = self.get_previous_pile_card(card_list)
