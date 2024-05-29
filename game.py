@@ -67,7 +67,6 @@ class Game:
 
             if event is None and self.is_slappable_event():
                 print("computer Slaps alone")
-                # TODO Fix bug where royal pile has slappable event and clobbers slap opp
                 self.bot_player_slaps()
                 winner_of_slap = self.current_slap.get_name_of_slap_winner()
                 self.player_wins_the_pile(winner_of_slap)
@@ -193,22 +192,28 @@ class Game:
 
     # TODO Break this up
     def can_complete_flipping_for_royals(self):
-        last_card = self.pile.get_top_card()
-        max_cards = max_cards_to_flip(last_card)
+        royal_card = self.pile.get_top_card()
+        max_cards = max_cards_to_flip(royal_card)
         flipped_cards = []
+        # TODO This is a weird state
         for _ in range(max_cards):
-            if not self.pile.cards:
-                print("out of cards")
-                return False
-
+            self.is_out_of_cards_sequence()
             self.flip_add_to_pile_then_remove_and_delay()
-            flipped_cards.append(self.pile.get_top_card())
+            last_flipped_card = self.pile.get_top_card()
+            flipped_cards.append(last_flipped_card)
 
-            if card_is_royal(self.pile.get_top_card()):
+            if self.is_slappable_event():
+                print("Weird end of royal bug here")
+                break
+
+            if card_is_royal(last_flipped_card):
                 return True
+        self.any_royal_card_in_list(flipped_cards)
 
-        if not self.is_slappable_event():
-            self.any_royal_card_in_list(flipped_cards)
+    def is_out_of_cards_sequence(self):
+        if not self.pile.cards:
+            print("out of cards")
+            return False
 
     def any_royal_card_in_list(self, card_list):
         previous_cards_in_pile = self.get_previous_pile_card(card_list)
