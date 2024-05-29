@@ -53,36 +53,41 @@ class Game:
             event = events.get(1.0)
             human = self.get_sole_human_player()
 
-            if event is None:
-                if self.is_slappable_event():
-                    if not self.is_current_slap_event():
-                        self.create_slap_event()
-                    print("computer Slaps alone")
-                    # TODO Fix bug where royal pile has slappable event and clobbers slap opp
-                    self.bot_player_slaps()
-                    winner_of_slap = self.current_slap.get_name_of_slap_winner()
-                    self.player_wins_the_pile(winner_of_slap)
-                    self.run_the_game()
-                else:
-                    return
+            # TODO try "if event is not None"
 
-            if event.key == keyboard.Key.space:
+            if event is None and not self.is_slappable_event():
+                return
+
+            # # TODO Remove below eventually, causes a bug when no event
+            # if event.key == keyboard.Key.enter:
+            #     return
+
+            if not self.is_current_slap_event():
+                self.create_slap_event()
+
+            if event is None and self.is_slappable_event():
+                print("computer Slaps alone")
+                # TODO Fix bug where royal pile has slappable event and clobbers slap opp
+                self.bot_player_slaps()
+                winner_of_slap = self.current_slap.get_name_of_slap_winner()
+                self.player_wins_the_pile(winner_of_slap)
+                self.run_the_game()
+
+            if event.key == keyboard.Key.space and not self.is_slappable_event():
+                self.player_buries_their_card(human)
+                print("bury a card")
+                self.print_players_and_number_of_cards()
+
+            if event.key == keyboard.Key.space and self.is_slappable_event():
                 key_press_time = time.time()
-                print("hooray a human slap!")
                 duration = key_press_time - self.last_card_flip_time
+                print(f"hooray a human slap in {duration}!")
                 self.current_slap.add_player_and_slaptime_to_slap(human, duration)
-                if self.is_slappable_event():
-                    if not self.is_current_slap_event():
-                        self.create_slap_event()
-                    print("we got a standoff here")
-                    self.bot_player_slaps()
-                    winner_of_slap = self.current_slap.get_name_of_slap_winner()
-                    self.player_wins_the_pile(winner_of_slap)
-                if not self.is_slappable_event():
-                    self.player_buries_their_card(human)
-                    print("bury a card")
-                    self.print_players_and_number_of_cards()
-                self.remove_slap_event()
+                self.bot_player_slaps()
+                winner_of_slap = self.current_slap.get_name_of_slap_winner()
+                self.player_wins_the_pile(winner_of_slap)
+
+            self.remove_slap_event()
 
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
@@ -201,12 +206,12 @@ class Game:
 
             if card_is_royal(self.pile.get_top_card()):
                 return True
-
         self.any_royal_card_in_list(flipped_cards)
 
     def any_royal_card_in_list(self, card_list):
         previous_cards_in_pile = self.get_previous_pile_card(card_list)
         if not any(card_is_royal(card) for card in previous_cards_in_pile):
+            self.delay_between_card_flips()
             print("no royals here")
             return False
         else:

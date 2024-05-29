@@ -12,5 +12,6 @@ difficulty = input("Set game difficulty (1 = Easy | 2 = Medium | 3 = Hard): ")
 
 my_game = game.Game(players_hands, difficulty)
 # TODO Fix bug where royal pile has slappable event and clobbers slap opp
+# TODO Cleanup single observer method, break out functions
 my_game.initialize_game()
 my_game.run_the_game()
