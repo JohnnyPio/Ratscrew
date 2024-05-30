@@ -213,8 +213,7 @@ class Game:
             flipped_cards.append(last_flipped_card)
 
             if self.is_slappable_event():
-                # print("Weird end of royal bug here")
-                break
+                return True
 
             if card_is_royal(last_flipped_card):
                 return True
