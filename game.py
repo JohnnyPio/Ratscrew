@@ -31,6 +31,16 @@ def card_is_royal(card):
         return False
 
 
+def user_presses_space(event):
+    if event.key == keyboard.Key.space:
+        return True
+
+
+def user_presses_enter(event):
+    if event.key == keyboard.Key.enter:
+        return True
+
+
 class Game:
     def __init__(self, players, difficulty):
         self.players = players
