@@ -68,8 +68,8 @@ class Game:
             if event is None and not self.is_slappable_event():
                 return
 
-            # # TODO Remove below eventually, causes a bug when no event
-            # if event.key == keyboard.Key.enter:
+            # TODO Remove below eventually, causes a bug when no event
+            # if user_presses_enter(event):
             #     return
 
             if not self.is_current_slap_event():
@@ -82,12 +82,12 @@ class Game:
                 self.player_wins_the_pile(winner_of_slap)
                 self.run_the_game()
 
-            if event.key == keyboard.Key.space and not self.is_slappable_event():
+            if user_presses_space(event) and not self.is_slappable_event():
                 self.player_buries_their_card(human)
                 print("bury a card")
                 self.print_players_and_number_of_cards()
 
-            if event.key == keyboard.Key.space and self.is_slappable_event():
+            if user_presses_space(event) and self.is_slappable_event():
                 key_press_time = time.time()
                 duration = key_press_time - self.last_card_flip_time
                 print(f"hooray a human slap in {duration}!")
@@ -213,7 +213,7 @@ class Game:
             flipped_cards.append(last_flipped_card)
 
             if self.is_slappable_event():
-                print("Weird end of royal bug here")
+                # print("Weird end of royal bug here")
                 break
 
             if card_is_royal(last_flipped_card):
@@ -303,8 +303,8 @@ class Game:
 
     # TODO Move this to Slap
     def a_bot_player_slaps(self):
-        this_slap = slap.Slap()
-        this_slap.add_player_and_slaptime_to_slap(self.get_sole_bot_player(), self.computer_slap_delay())
+        self.create_slap_event()
+        self.current_slap.add_player_and_slaptime_to_slap(self.get_sole_bot_player(), self.computer_slap_delay())
         self.get_sole_bot_player().set_as_slapped()
 
     def create_slap_event(self):
