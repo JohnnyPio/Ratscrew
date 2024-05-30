@@ -207,7 +207,6 @@ class Game:
         flipped_cards = []
         # TODO This is a weird state
         for _ in range(max_cards):
-            self.is_out_of_cards_sequence()
             self.flip_add_to_pile_then_remove_and_delay()
             last_flipped_card = self.pile.get_top_card()
             flipped_cards.append(last_flipped_card)
@@ -218,11 +217,6 @@ class Game:
             if card_is_royal(last_flipped_card):
                 return True
         self.any_royal_card_in_list(flipped_cards)
-
-    def is_out_of_cards_sequence(self):
-        if not self.pile.cards:
-            print("out of cards")
-            return False
 
     def any_royal_card_in_list(self, card_list):
         previous_cards_in_pile = self.get_previous_pile_card(card_list)
