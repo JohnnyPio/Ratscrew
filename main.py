@@ -11,6 +11,8 @@ players_hands.append(player_1)
 difficulty = input("Set game difficulty (1 = Easy | 2 = Medium | 3 = Hard): ")
 
 my_game = game.Game(players_hands, difficulty)
-# TODO Cleanup single observer method, break out functions
+# TODO Fix bug where player1 also buries a card after slapping
+# TODO Fix end of game rules where the player can stay alive if they have a royal and it still needs to be played by the opponent
+# TODO Fix stash
 my_game.initialize_game()
 my_game.run_the_game()
