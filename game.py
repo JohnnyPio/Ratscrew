@@ -178,7 +178,7 @@ class Game:
 
     def initialize_observers(self):
         self.observe_for_slap_opportunity.add_observer(self.monitor_for_slap_opportunity)
-        self.observe_for_end_game.add_observer(self.a_player_is_out_of_cards)
+        self.observe_for_end_game.add_observer(self.monitor_for_end_game)
 
     def initialize_game(self):
         self.initialize_observers()
