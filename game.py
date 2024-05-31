@@ -60,7 +60,7 @@ class Game:
     def monitor_for_slap_opportunity(self):
         with keyboard.Events() as events:
             # TODO the below timeout should match the slap delay
-            event = events.get(1.0)
+            event = events.get(self.get_delay_time())
             human = self.get_sole_human_player()
 
             if self.is_no_event_and_no_slap(event):
@@ -125,8 +125,7 @@ class Game:
 
     def bot_player_slaps(self):
         bot_player = self.get_sole_bot_player()
-        # TODO the second arg below should reflect the game difficulty
-        self.current_slap.add_player_and_slaptime_to_slap(bot_player, 0.9)
+        self.current_slap.add_player_and_slaptime_to_slap(bot_player, self.get_computer_slap_delay_time())
 
     # TODO This should probably return a Boolean and move the logic up
     def a_player_is_out_of_cards(self):
@@ -269,7 +268,10 @@ class Game:
         return self.difficulty == "5"
 
     def delay_between_card_flips(self):
-        delay = int
+        time.sleep(self.get_delay_time())
+
+    def get_delay_time(self):
+        delay = float
         if self.is_difficulty_easy():
             delay = 1
         elif self.is_difficulty_medium():
@@ -277,13 +279,13 @@ class Game:
         elif self.is_difficulty_hard():
             delay = .7
         elif self.is_difficulty_godlike():
-            delay = .1
+            delay = .01
         else:
             ValueError()
-        time.sleep(delay)
+        return delay
 
-    def computer_slap_delay(self):
-        delay = int
+    def get_computer_slap_delay_time(self):
+        delay = float
         if self.is_difficulty_easy():
             delay = 1
         elif self.is_difficulty_medium():
@@ -291,7 +293,7 @@ class Game:
         elif self.is_difficulty_hard():
             delay = .70
         elif self.is_difficulty_godlike():
-            delay = .50
+            delay = .1
         else:
             ValueError()
         return delay
@@ -316,7 +318,8 @@ class Game:
     # TODO Move this to Slap
     def a_bot_player_slaps(self):
         self.create_slap_event()
-        self.current_slap.add_player_and_slaptime_to_slap(self.get_sole_bot_player(), self.computer_slap_delay())
+        self.current_slap.add_player_and_slaptime_to_slap(self.get_sole_bot_player(),
+                                                          self.get_computer_slap_delay_time())
         self.get_sole_bot_player().set_as_slapped()
 
     def create_slap_event(self):
