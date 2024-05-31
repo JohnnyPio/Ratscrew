@@ -65,19 +65,19 @@ class Game:
 
             if self.is_no_event_and_no_slap(event):
                 return
-
             if not self.is_current_slap_event():
                 self.create_slap_event()
-
             if self.is_computer_only_slap(event):
                 self.run_computer_only_slap_process(event)
-
             if self.is_human_only_slap(event):
                 self.run_human_only_slap_process(human)
-
             if self.is_both_human_and_computer_slap(event):
                 self.run_both_human_and_computer_slap_process(human)
-
+            # TODO There is a still two bugs here. 1) When a player and computer slap, I think there's a timing
+            #  problem where the program still thinks there is a slap AFTER the pile clears and forces the player to
+            #  bury another card. 2) Everytime a human slaps, regardless of winning or losing the slap the winner
+            #  will flip 2 or even 3 times.
+            event = None
             self.remove_slap_event()
 
     def is_no_event_and_no_slap(self, event):
