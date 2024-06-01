@@ -41,6 +41,11 @@ def user_presses_enter(event):
         return True
 
 
+def card_is_none(card):
+    if card is None:
+        return True
+
+
 class Game:
     def __init__(self, players, difficulty):
         self.players = players
@@ -53,22 +58,26 @@ class Game:
         self.current_slap = None
         self.last_card_flip_time = None
 
-    # TODO fix for player1's last card being a royal
     def monitor_for_end_game(self):
         if self.is_a_player_out_of_cards():
             top_card = self.pile.get_top_card()
-            # TODO Add if for if game ends on a slap or pile collect
+            if card_is_none(top_card):
+                self.end_the_game()
             if card_is_royal(top_card):
+                # TODO fix for player1's last card being a royal running the entire sequence
                 return
-
-            print(f"{self.player_out_of_cards().get_name()} loses, game over")
-            self.stop_dealing()
-            exit()
+            else:
+                self.end_the_game()
 
     def is_a_player_out_of_cards(self):
         for player in self.players:
             if player.get_number_of_cards() == 0:
                 return True
+
+    def end_the_game(self):
+        print(f"{self.player_out_of_cards().get_name()} loses, game over")
+        self.stop_dealing()
+        exit()
 
     def player_out_of_cards(self):
         for player in self.players:
