@@ -84,8 +84,10 @@ class Game:
             if player.get_number_of_cards() == 0:
                 return player
 
+    # TODO break out monitor for slap opp to be monitor for human slap
     def monitor_for_slap_opportunity(self):
         with keyboard.Events() as events:
+            # TODO There is something fishy here where slap events aren't being registered. Likely related to timing
             event = events.get(self.get_delay_time())
             human = self.get_sole_human_player()
 
@@ -103,8 +105,6 @@ class Game:
             #  problem where the program still thinks there is a slap AFTER the pile clears and forces the player to
             #  bury another card. 2) Everytime a human slaps, regardless of winning or losing the slap the winner
             #  will flip 2 or even 3 times.
-            event = None
-            self.remove_slap_event()
 
     def is_no_event_and_no_slap(self, event):
         if event is None and not self.is_slappable_event():
@@ -119,6 +119,7 @@ class Game:
         self.bot_player_slaps()
         winner_of_slap = self.current_slap.get_name_of_slap_winner()
         self.player_wins_the_pile(winner_of_slap)
+        self.remove_slap_event()
         self.run_the_game()
 
     def is_human_only_slap(self, event):
@@ -129,6 +130,8 @@ class Game:
         self.player_buries_their_card(human)
         print("bury a card")
         self.print_players_and_number_of_cards()
+        self.remove_slap_event()
+        self.run_the_game()
 
     def is_both_human_and_computer_slap(self, event):
         if user_presses_space(event) and self.is_slappable_event():
@@ -141,7 +144,9 @@ class Game:
         self.current_slap.add_player_and_slaptime_to_slap(human, duration)
         self.bot_player_slaps()
         winner_of_slap = self.current_slap.get_name_of_slap_winner()
+        self.remove_slap_event()
         self.player_wins_the_pile(winner_of_slap)
+        self.run_the_game()
 
     def is_slappable_event(self):
         if self.pile.matching_sandwich_cards() or self.pile.matching_top_cards():
@@ -152,6 +157,7 @@ class Game:
     def bot_player_slaps(self):
         bot_player = self.get_sole_bot_player()
         self.current_slap.add_player_and_slaptime_to_slap(bot_player, self.get_computer_slap_delay_time())
+        print(f"a bot slap in {self.get_computer_slap_delay_time()}!")
 
     def stop_dealing(self):
         self.should_continue_dealing = False
@@ -309,7 +315,7 @@ class Game:
         elif self.is_difficulty_medium():
             delay = .85
         elif self.is_difficulty_hard():
-            delay = .70
+            delay = 1.70
         elif self.is_difficulty_godlike():
             delay = .1
         else:
