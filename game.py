@@ -206,6 +206,7 @@ class Game:
 
     def initialize_game(self):
         self.initialize_observers()
+        print(f'The card flip delay time is {self.get_delay_time()}')
         self.pile.shuffle()
         self.full_deck_deal_to_all_players()
         self.pile.empty()
