@@ -11,3 +11,6 @@ class Player:
 
     def has_cards(self):
         return bool(self.hand)
+
+    def card_count(self):
+        return len(self.hand)

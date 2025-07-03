@@ -20,6 +20,16 @@ def start_game():
     output = tk.Label(root, text="Welcome to Egyptian Ratscrew!", font=("Arial", 14))
     output.pack(pady=10)
 
+    challenge_status = tk.Label(root, text="", font=("Arial", 12))
+    challenge_status.pack()
+
+    card_counts = tk.Frame(root)
+    card_counts.pack(pady=5)
+    player_count_label = tk.Label(card_counts, text=f"You: {p1.card_count()} cards", font=("Arial", 12))
+    player_count_label.pack(side=tk.LEFT, padx=20)
+    computer_count_label = tk.Label(card_counts, text=f"Computer: {p2.card_count()} cards", font=("Arial", 12))
+    computer_count_label.pack(side=tk.RIGHT, padx=20)
+
     frame = tk.Frame(root)
     frame.pack(pady=10)
 
@@ -45,35 +55,46 @@ def start_game():
         else:
             label.config(text=str(card))
 
-    def deal_one(event=None):
+    def update_card_counts():
+        player_count_label.config(text=f"You: {p1.card_count()} cards")
+        computer_count_label.config(text=f"Computer: {p2.card_count()} cards")
+
+    def play_one(event=None):
         player, card = game.play_one()
-        if player == p1:
-            show_card_image(player_card_label, card)
-        else:
-            show_card_image(computer_card_label, card)
+        if card is not None:
+            if player == p1:
+                show_card_image(player_card_label, card)
+            else:
+                show_card_image(computer_card_label, card)
+
+        update_card_counts()
 
         if not p1.has_cards():
             output.config(text="You have no more cards. Game over.")
         elif not p2.has_cards():
             output.config(text="Computer has no more cards. You win!")
         else:
-            output.config(text=f"{player.name} played {card}. Slap now if needed.")
-
-        game.next_turn()
+            text = f"{player.name} played {card}. Slap now if needed."
+            if game.challenge_count > 0:
+                text += f" {game.challenge_player.name} played a royal! {game.challenge_count} chance(s) remain."
+            output.config(text=text)
+            challenge_status.config(
+                text=f"Challenge: {game.challenge_count} card(s) left" if game.challenge_count > 0 else "")
 
     def slap(event=None):
         if game.slap():
-            game.claim_pile(p1)
             output.config(text="Slap successful! You claimed the pile.")
             player_card_label.config(image="")
             computer_card_label.config(image="")
+            challenge_status.config(text="")
+            update_card_counts()
         else:
             output.config(text="Bad slap! Nothing happens.")
 
-    tk.Button(root, text="Deal Card", command=deal_one).pack(pady=5)
+    tk.Button(root, text="Play Card", command=play_one).pack(pady=5)
     tk.Button(root, text="Slap!", command=slap).pack(pady=5)
 
-    root.bind("<Return>", deal_one)
     root.bind("<space>", slap)
+    root.bind("<Return>", play_one)
 
     root.mainloop()

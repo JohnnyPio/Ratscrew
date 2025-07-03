@@ -11,6 +11,9 @@ class Card:
     def is_face_card(self):
         return self.rank in ["J", "Q", "K", "A"]
 
+    def face_card_count(self):
+        return {"J": 1, "Q": 2, "K": 3, "A": 4}.get(self.rank, 0)
+
     def image_filename(self):
         rank_map = {"J": "jack", "Q": "queen", "K": "king", "A": "ace"}
         rank = rank_map.get(self.rank, self.rank)
