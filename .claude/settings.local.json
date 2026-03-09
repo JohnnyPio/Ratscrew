@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"from tkinter import PhotoImage; import tkinter as tk; r=tk.Tk\\(\\); r.withdraw\\(\\); img=PhotoImage\\(file=''c:/Users/JohnS/OneDrive/Documents/Local-Repos/Ratscrew/ui/assets/back.png''\\); print\\(img.width\\(\\), img.height\\(\\)\\); r.destroy\\(\\)\")",
+      "Bash(python -c \"from PIL import Image, ImageTk; print\\(''Pillow available''\\)\")",
+      "Bash(pip install pillow)"
+    ]
+  }
+}
