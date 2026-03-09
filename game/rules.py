@@ -1,4 +1,13 @@
 class GameRules:
+    def __init__(self, player1, player2):
+        self.p1 = player1
+        self.p2 = player2
+        self.pile = []
+        self.turn = self.p1
+        self.challenge_count = 0
+        self.challenge_player = None
+        self._waiting_for_clear = False
+
     def get_game_state(self):
         return {
             'turn': self.turn.name,
@@ -12,30 +21,22 @@ class GameRules:
             }
         }
 
-    def __init__(self, player1, player2):
-        self.p1 = player1
-        self.p2 = player2
-        self.pile = []
-        self.turn = self.p1
-        self.challenge_count = 0
-        self.challenge_player = None
-        self._waiting_for_clear = False
-
     def play_one(self):
         if self._waiting_for_clear:
-            return self.turn, None
+            self._waiting_for_clear = False
+            return None
 
         card = self.turn.play_card()
         if not card:
-            if self.challenge_count > 0 and self.turn != self.challenge_player:
-                print(f"{self.turn.name} ran out of cards. {self.challenge_player.name} wins the pile.")
+            if self.challenge_count > 0:
+                print(f"{self.turn.name} ran out of cards during challenge.")
                 self.claim_pile(self.challenge_player)
                 self.turn = self.challenge_player
                 self.challenge_player = None
-            return self.turn, None
+                self.challenge_count = 0
+            return None
 
-        if card:
-            self.pile.append(card)
+        self.pile.append(card)
 
         if self.challenge_count > 0:
             return self._handle_challenge(card)
@@ -56,7 +57,8 @@ class GameRules:
 
         if self.turn == self.challenge_player:
             print("Challenger tried to play during challenge. Ignored.")
-            return self.turn, None
+            self.next_turn()
+            return None
 
         if card.is_face_card():
             self.challenge_player = self.turn

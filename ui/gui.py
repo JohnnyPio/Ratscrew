@@ -59,34 +59,46 @@ def start_game():
         player_count_label.config(text=f"You: {p1.card_count()} cards")
         computer_count_label.config(text=f"Computer: {p2.card_count()} cards")
 
+    def clear_cards():
+        player_card_label.config(image="")
+        computer_card_label.config(image="")
+        challenge_status.config(text="")
+
     def play_one(event=None):
-        player, card = game.play_one()
-        if card is not None:
-            if player == p1:
-                show_card_image(player_card_label, card)
-            else:
-                show_card_image(computer_card_label, card)
+        result = game.play_one()
+
+        if not game.pile:
+            clear_cards()
 
         update_card_counts()
 
         if not p1.has_cards():
             output.config(text="You have no more cards. Game over.")
+            return
         elif not p2.has_cards():
             output.config(text="Computer has no more cards. You win!")
+            return
+
+        if result is None:
+            return
+
+        player, card = result
+        if player == p1:
+            show_card_image(player_card_label, card)
         else:
-            text = f"{player.name} played {card}. Slap now if needed."
-            if game.challenge_count > 0:
-                text += f" {game.challenge_player.name} played a royal! {game.challenge_count} chance(s) remain."
-            output.config(text=text)
-            challenge_status.config(
-                text=f"Challenge: {game.challenge_count} card(s) left" if game.challenge_count > 0 else "")
+            show_card_image(computer_card_label, card)
+
+        text = f"{player.name} played {card}. Slap now if needed."
+        if game.challenge_count > 0:
+            text += f" {game.challenge_player.name} played a royal! {game.challenge_count} chance(s) remain."
+        output.config(text=text)
+        challenge_status.config(
+            text=f"Challenge: {game.challenge_count} card(s) left" if game.challenge_count > 0 else "")
 
     def slap(event=None):
         if game.slap():
             output.config(text="Slap successful! You claimed the pile.")
-            player_card_label.config(image="")
-            computer_card_label.config(image="")
-            challenge_status.config(text="")
+            clear_cards()
             update_card_counts()
         else:
             output.config(text="Bad slap! Nothing happens.")
