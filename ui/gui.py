@@ -66,16 +66,14 @@ def start_game():
 
     def play_one(event=None):
         result = game.play_one()
-
-        if not game.pile:
-            clear_cards()
-
         update_card_counts()
 
         if not p1.has_cards():
+            clear_cards()
             output.config(text="You have no more cards. Game over.")
             return
         elif not p2.has_cards():
+            clear_cards()
             output.config(text="Computer has no more cards. You win!")
             return
 
@@ -83,20 +81,27 @@ def start_game():
             return
 
         player, card = result
+
+        if game.last_pile_winner:
+            clear_cards()
+            output.config(text=f"{player.name} played {card}. {game.last_pile_winner.name} claimed the pile!")
+            return
+
         if player == p1:
             show_card_image(player_card_label, card)
         else:
             show_card_image(computer_card_label, card)
 
-        text = f"{player.name} played {card}. Slap now if needed."
         if game.challenge_count > 0:
-            text += f" {game.challenge_player.name} played a royal! {game.challenge_count} chance(s) remain."
+            text = f"{player.name} played {card}. {game.challenge_player.name} played a royal! {game.challenge_count} chance(s) remain."
+            challenge_status.config(text=f"Challenge: {game.challenge_count} card(s) left")
+        else:
+            text = f"{player.name} played {card}. Slap now if needed."
+            challenge_status.config(text="")
         output.config(text=text)
-        challenge_status.config(
-            text=f"Challenge: {game.challenge_count} card(s) left" if game.challenge_count > 0 else "")
 
     def slap(event=None):
-        if game.slap():
+        if game.slap(p1):
             output.config(text="Slap successful! You claimed the pile.")
             clear_cards()
             update_card_counts()
