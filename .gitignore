@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# PyInstaller build artifacts
+build/
+*.spec
+
+# Compiled output lives in dist/ — commit dist/EgyptianRatscrew.exe if you want to ship it
+# Uncomment the line below to also ignore dist/
+# dist/

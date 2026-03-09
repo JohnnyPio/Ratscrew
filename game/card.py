@@ -1,4 +1,12 @@
 import os
+import sys
+
+
+def _resource_path(relative_path):
+    """Return the correct path whether running from source or a PyInstaller bundle."""
+    base = getattr(sys, '_MEIPASS', os.path.join(os.path.dirname(__file__), '..'))
+    return os.path.join(base, relative_path)
+
 
 class Card:
     def __init__(self, suit, rank):
@@ -18,4 +26,4 @@ class Card:
         rank_map = {"J": "jack", "Q": "queen", "K": "king", "A": "ace"}
         rank = rank_map.get(self.rank, self.rank)
         suit = self.suit.lower()
-        return os.path.join("ui", "assets", f"{rank}_of_{suit}.png")
+        return _resource_path(os.path.join("ui", "assets", f"{rank}_of_{suit}.png"))
